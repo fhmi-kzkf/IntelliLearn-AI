@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Learning - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black">
+    <div class="max-w-7xl mx-auto">
+        <!-- Course Header -->
+        <div class="bg-intellilearn-gray-medium border-b border-intellilearn-gray-dark p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <a href="{% url 'courses:my_courses' %}" class="text-gray-400 hover:text-intellilearn-white transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to My Courses
+                    </a>
+                    <div class="w-px h-6 bg-intellilearn-gray-dark"></div>
+                    <h1 class="text-xl font-bold text-intellilearn-white">Introduction to Machine Learning</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-400">
+                        Lesson 8 of 12
+                    </div>
+                    <div class="w-32 bg-intellilearn-gray-dark rounded-full h-2">
+                        <div class="bg-intellilearn-red h-2 rounded-full" style="width: 67%"></div>
+                    </div>
+                    <span class="text-sm text-intellilearn-white">67%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex">
+            <!-- Sidebar -->
+            <div class="w-80 bg-intellilearn-gray-medium border-r border-intellilearn-gray-dark h-screen overflow-y-auto">
+                <div class="p-4">
+                    <h2 class="text-lg font-bold text-intellilearn-white mb-4">Course Content</h2>
+                    
+                    <!-- Lesson List -->
+                    <div class="space-y-2">
+                        <div class="bg-intellilearn-gray-dark rounded-lg p-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-intellilearn-white text-sm font-medium">1. What is Machine Learning?</h3>
+                                    <p class="text-gray-400 text-xs">5 min • Completed</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-intellilearn-gray-dark rounded-lg p-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-intellilearn-white text-sm font-medium">2. Types of Learning</h3>
+                                    <p class="text-gray-400 text-xs">8 min • Completed</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-intellilearn-red rounded-lg p-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                                    <i class="fas fa-play text-intellilearn-red text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-white text-sm font-medium">3. Neural Networks Basics</h3>
+                                    <p class="text-red-200 text-xs">10 min • Current</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-intellilearn-gray-dark rounded-lg p-3 opacity-50">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-lock text-gray-400 text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-intellilearn-white text-sm font-medium">4. Training Algorithms</h3>
+                                    <p class="text-gray-400 text-xs">12 min • Locked</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="flex-1">
+                <!-- Video/Content Area -->
+                <div class="bg-intellilearn-black">
+                    <div class="aspect-video bg-intellilearn-gray-dark flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-24 h-24 bg-intellilearn-red rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-play text-white text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-intellilearn-white mb-2">Neural Networks Basics</h3>
+                            <p class="text-gray-400">Understanding the building blocks of artificial neural networks</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Lesson Content -->
+                    <div class="p-8">
+                        <div class="max-w-4xl">
+                            <h2 class="text-2xl font-bold text-intellilearn-white mb-6">Neural Networks: The Building Blocks of AI</h2>
+                            
+                            <div class="prose prose-invert max-w-none">
+                                <p class="text-gray-300 mb-4">
+                                    Neural networks are the foundation of modern artificial intelligence. In this lesson, we'll explore 
+                                    how these networks are inspired by the human brain and how they process information to make predictions.
+                                </p>
+                                
+                                <h3 class="text-xl font-bold text-intellilearn-white mb-4">What You'll Learn</h3>
+                                <ul class="text-gray-300 mb-6 space-y-2">
+                                    <li class="flex items-start space-x-2">
+                                        <i class="fas fa-check text-intellilearn-red mt-1"></i>
+                                        <span>The basic structure of artificial neurons</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <i class="fas fa-check text-intellilearn-red mt-1"></i>
+                                        <span>How neural networks process information</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <i class="fas fa-check text-intellilearn-red mt-1"></i>
+                                        <span>Common activation functions and their purposes</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <i class="fas fa-check text-intellilearn-red mt-1"></i>
+                                        <span>Real-world applications of neural networks</span>
+                                    </li>
+                                </ul>
+                                
+                                <div class="bg-intellilearn-gray-medium rounded-lg p-6 mb-6">
+                                    <h4 class="text-lg font-bold text-intellilearn-white mb-3">Key Concept: The Artificial Neuron</h4>
+                                    <p class="text-gray-300 mb-4">
+                                        An artificial neuron, also called a perceptron, is the basic unit of a neural network. 
+                                        It receives inputs, applies weights to them, and produces an output through an activation function.
+                                    </p>
+                                    
+                                    <div class="bg-intellilearn-gray-dark rounded-lg p-4">
+                                        <code class="text-green-400">
+                                            # Simple neuron calculation<br>
+                                            inputs = [0.5, 0.3, 0.8]<br>
+                                            weights = [0.2, 0.8, -0.5]<br>
+                                            bias = 0.1<br>
+                                            <br>
+                                            # Weighted sum<br>
+                                            weighted_sum = sum(i * w for i, w in zip(inputs, weights)) + bias<br>
+                                            <br>
+                                            # Apply activation function (sigmoid)<br>
+                                            output = 1 / (1 + exp(-weighted_sum))
+                                        </code>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <a href="#" class="text-intellilearn-red hover:text-red-400 transition-colors">
+                                        <i class="fas fa-robot mr-2"></i>Ask AI Tutor about this topic
+                                    </a>
+                                    <div class="flex space-x-4">
+                                        <button class="bg-intellilearn-gray-medium text-intellilearn-white px-6 py-2 rounded-lg hover:bg-intellilearn-gray-dark transition-colors">
+                                            <i class="fas fa-arrow-left mr-2"></i>Previous
+                                        </button>
+                                        <button class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                                            Mark Complete & Continue
+                                            <i class="fas fa-arrow-right ml-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

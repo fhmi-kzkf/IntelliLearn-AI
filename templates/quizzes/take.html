@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+
+{% block title %}Taking Quiz - IntelliLearn AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .question-container {
+        transition: all 0.3s ease-in-out;
+    }
+    .choice-option {
+        transition: all 0.2s ease;
+    }
+    .choice-option:hover {
+        transform: translateX(4px);
+    }
+    .progress-bar {
+        transition: width 0.3s ease;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Quiz Header -->
+        <div class="bg-intellilearn-gray-medium rounded-lg p-6 mb-6 border border-intellilearn-gray-dark">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-intellilearn-white">Introduction to Machine Learning</h1>
+                    <p class="text-gray-400 mt-1">Question 3 of 10 • Medium Difficulty</p>
+                </div>
+                <div class="mt-4 lg:mt-0 flex items-center space-x-4">
+                    <div class="flex items-center space-x-2 text-yellow-400">
+                        <i class="fas fa-clock"></i>
+                        <span id="timer" class="font-mono text-lg">12:34</span>
+                    </div>
+                    <button onclick="confirmExit()" class="text-gray-400 hover:text-intellilearn-red transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-intellilearn-gray-dark rounded-full h-3">
+                <div class="progress-bar bg-intellilearn-red h-3 rounded-full" style="width: 30%"></div>
+            </div>
+            <div class="flex justify-between text-sm text-gray-400 mt-2">
+                <span>Progress</span>
+                <span>30% Complete</span>
+            </div>
+        </div>
+
+        <!-- Question Container -->
+        <div class="question-container bg-intellilearn-gray-medium rounded-lg p-8 mb-6 border border-intellilearn-gray-dark">
+            <div class="mb-6">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="bg-intellilearn-red text-white px-3 py-1 rounded-full text-sm font-medium">
+                        Question 3
+                    </span>
+                    <span class="text-gray-400 text-sm">Multiple Choice • 2 points</span>
+                </div>
+                
+                <h2 class="text-xl font-semibold text-intellilearn-white leading-relaxed mb-4">
+                    Which of the following algorithms is best suited for classification problems when you have a large dataset with many features?
+                </h2>
+                
+                <!-- Code snippet (optional) -->
+                <div class="bg-intellilearn-gray-dark rounded-lg p-4 mb-6 border border-gray-600">
+                    <code class="text-green-400 text-sm">
+                        # Example: Feature matrix X with shape (10000, 500)<br>
+                        X = np.random.rand(10000, 500)<br>
+                        y = np.random.randint(0, 2, 10000)
+                    </code>
+                </div>
+            </div>
+
+            <!-- Answer Options -->
+            <div class="space-y-4">
+                <!-- Option A -->
+                <label class="choice-option flex items-center p-4 bg-intellilearn-gray-dark rounded-lg border-2 border-transparent hover:border-intellilearn-red cursor-pointer">
+                    <input type="radio" name="answer" value="A" class="hidden">
+                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex items-center justify-center mr-4 choice-indicator">
+                        <span class="text-sm font-bold text-intellilearn-white hidden">A</span>
+                    </div>
+                    <div class="flex-1">
+                        <span class="text-intellilearn-white font-medium">Linear Regression</span>
+                        <p class="text-gray-400 text-sm mt-1">A statistical method for modeling relationships between variables</p>
+                    </div>
+                </label>
+
+                <!-- Option B -->
+                <label class="choice-option flex items-center p-4 bg-intellilearn-gray-dark rounded-lg border-2 border-transparent hover:border-intellilearn-red cursor-pointer">
+                    <input type="radio" name="answer" value="B" class="hidden">
+                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex items-center justify-center mr-4 choice-indicator">
+                        <span class="text-sm font-bold text-intellilearn-white hidden">B</span>
+                    </div>
+                    <div class="flex-1">
+                        <span class="text-intellilearn-white font-medium">Random Forest</span>
+                        <p class="text-gray-400 text-sm mt-1">An ensemble method that combines multiple decision trees</p>
+                    </div>
+                </label>
+
+                <!-- Option C -->
+                <label class="choice-option flex items-center p-4 bg-intellilearn-gray-dark rounded-lg border-2 border-transparent hover:border-intellilearn-red cursor-pointer">
+                    <input type="radio" name="answer" value="C" class="hidden">
+                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex items-center justify-center mr-4 choice-indicator">
+                        <span class="text-sm font-bold text-intellilearn-white hidden">C</span>
+                    </div>
+                    <div class="flex-1">
+                        <span class="text-intellilearn-white font-medium">K-Means Clustering</span>
+                        <p class="text-gray-400 text-sm mt-1">An unsupervised learning algorithm for grouping data</p>
+                    </div>
+                </label>
+
+                <!-- Option D -->
+                <label class="choice-option flex items-center p-4 bg-intellilearn-gray-dark rounded-lg border-2 border-transparent hover:border-intellilearn-red cursor-pointer">
+                    <input type="radio" name="answer" value="D" class="hidden">
+                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex items-center justify-center mr-4 choice-indicator">
+                        <span class="text-sm font-bold text-intellilearn-white hidden">D</span>
+                    </div>
+                    <div class="flex-1">
+                        <span class="text-intellilearn-white font-medium">Support Vector Machine (SVM)</span>
+                        <p class="text-gray-400 text-sm mt-1">A powerful classifier that works well with high-dimensional data</p>
+                    </div>
+                </label>
+            </div>
+
+            <!-- AI Hint (optional) -->
+            <div id="ai-hint" class="mt-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 hidden">
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-robot text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-blue-300 font-medium mb-2">AI Tutor Hint</h4>
+                        <p class="text-blue-100 text-sm">
+                            Think about which algorithm performs well when you have many features (high-dimensional data) 
+                            and can handle complex decision boundaries effectively.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+            <div class="flex items-center space-x-4">
+                <button onclick="previousQuestion()" class="flex items-center px-6 py-3 bg-intellilearn-gray-medium text-intellilearn-white rounded-lg hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
+                    <i class="fas fa-chevron-left mr-2"></i>Previous
+                </button>
+                
+                <button onclick="toggleHint()" class="flex items-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-lightbulb mr-2"></i>Get Hint
+                </button>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button onclick="flagQuestion()" class="flex items-center px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+                    <i class="fas fa-flag mr-2"></i>Flag
+                </button>
+                
+                <button onclick="nextQuestion()" class="flex items-center px-6 py-3 bg-intellilearn-red text-white rounded-lg hover:bg-red-600 transition-colors font-medium">
+                    Next<i class="fas fa-chevron-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Question Navigation Panel -->
+        <div class="mt-8 bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+            <h3 class="text-lg font-semibold text-intellilearn-white mb-4">Question Overview</h3>
+            <div class="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                <!-- Question buttons -->
+                <button class="w-10 h-10 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">1</button>
+                <button class="w-10 h-10 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">2</button>
+                <button class="w-10 h-10 bg-intellilearn-red text-white rounded-lg text-sm font-medium">3</button>
+                <button class="w-10 h-10 bg-intellilearn-gray-dark text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">4</button>
+                <button class="w-10 h-10 bg-intellilearn-gray-dark text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">5</button>
+                <button class="w-10 h-10 bg-intellilearn-gray-dark text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">6</button>
+                <button class="w-10 h-10 bg-intellilearn-gray-dark text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">7</button>
+                <button class="w-10 h-10 bg-intellilearn-gray-dark text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">8</button>
+                <button class="w-10 h-10 bg-yellow-600 text-white rounded-lg text-sm font-medium hover:bg-yellow-700 transition-colors">9</button>
+                <button class="w-10 h-10 bg-intellilearn-gray-dark text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">10</button>
+            </div>
+            <div class="flex items-center space-x-6 mt-4 text-sm">
+                <div class="flex items-center space-x-2">
+                    <div class="w-4 h-4 bg-green-600 rounded"></div>
+                    <span class="text-gray-300">Answered</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-4 h-4 bg-intellilearn-red rounded"></div>
+                    <span class="text-gray-300">Current</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-4 h-4 bg-yellow-600 rounded"></div>
+                    <span class="text-gray-300">Flagged</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-4 h-4 bg-intellilearn-gray-dark rounded"></div>
+                    <span class="text-gray-300">Not Answered</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Quiz Button -->
+        <div class="text-center mt-8">
+            <button onclick="confirmSubmit()" class="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium text-lg">
+                <i class="fas fa-check mr-2"></i>Submit Quiz
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modals -->
+<div id="exit-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-intellilearn-gray-medium rounded-lg p-6 max-w-md mx-4 border border-intellilearn-gray-dark">
+        <h3 class="text-xl font-semibold text-intellilearn-white mb-4">Exit Quiz?</h3>
+        <p class="text-gray-300 mb-6">Your progress will be saved, but you'll need to restart from where you left off.</p>
+        <div class="flex space-x-4">
+            <button onclick="closeModal('exit-modal')" class="flex-1 bg-intellilearn-gray-dark text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Cancel</button>
+            <button onclick="exitQuiz()" class="flex-1 bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">Exit Quiz</button>
+        </div>
+    </div>
+</div>
+
+<div id="submit-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-intellilearn-gray-medium rounded-lg p-6 max-w-md mx-4 border border-intellilearn-gray-dark">
+        <h3 class="text-xl font-semibold text-intellilearn-white mb-4">Submit Quiz?</h3>
+        <p class="text-gray-300 mb-6">You have answered 8 out of 10 questions. Once submitted, you cannot change your answers.</p>
+        <div class="flex space-x-4">
+            <button onclick="closeModal('submit-modal')" class="flex-1 bg-intellilearn-gray-dark text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Review Answers</button>
+            <button onclick="submitQuiz()" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">Submit</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Timer functionality
+    let timeLeft = 15 * 60; // 15 minutes in seconds
+    
+    function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 0) {
+            submitQuiz();
+            return;
+        }
+        
+        timeLeft--;
+    }
+    
+    setInterval(updateTimer, 1000);
+    
+    // Choice selection
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Reset all choice indicators
+            document.querySelectorAll('.choice-indicator').forEach(indicator => {
+                indicator.classList.remove('bg-intellilearn-red', 'border-intellilearn-red');
+                indicator.classList.add('border-gray-400');
+                indicator.querySelector('span').classList.add('hidden');
+            });
+            
+            // Highlight selected choice
+            const choiceIndicator = this.parentElement.querySelector('.choice-indicator');
+            choiceIndicator.classList.add('bg-intellilearn-red', 'border-intellilearn-red');
+            choiceIndicator.classList.remove('border-gray-400');
+            choiceIndicator.querySelector('span').classList.remove('hidden');
+        });
+    });
+    
+    // Navigation functions
+    function previousQuestion() {
+        // Implementation for previous question
+        console.log('Previous question');
+    }
+    
+    function nextQuestion() {
+        // Implementation for next question
+        console.log('Next question');
+    }
+    
+    function toggleHint() {
+        const hint = document.getElementById('ai-hint');
+        hint.classList.toggle('hidden');
+    }
+    
+    function flagQuestion() {
+        // Implementation for flagging question
+        console.log('Question flagged');
+    }
+    
+    function confirmExit() {
+        document.getElementById('exit-modal').classList.remove('hidden');
+    }
+    
+    function confirmSubmit() {
+        document.getElementById('submit-modal').classList.remove('hidden');
+    }
+    
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
+    
+    function exitQuiz() {
+        window.location.href = '/quizzes/';
+    }
+    
+    function submitQuiz() {
+        // Implementation for quiz submission
+        window.location.href = '/quizzes/1/attempt/1/results/';
+    }
+    
+    // Auto-save functionality
+    function autoSave() {
+        // Save current answers to localStorage or send to server
+        console.log('Auto-saving progress...');
+    }
+    
+    setInterval(autoSave, 30000); // Auto-save every 30 seconds
+</script>
+{% endblock %}

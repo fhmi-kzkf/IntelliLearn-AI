@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-intellilearn-white">Admin Dashboard</h1>
+                    <p class="text-gray-400 mt-2">System overview and statistics</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="bg-intellilearn-red text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-shield-alt mr-2"></i>Administrator
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Statistics -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-intellilearn-white mb-6">User Statistics</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Total Users -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Total Users</p>
+                            <p class="text-3xl font-bold text-intellilearn-white">{{ total_users }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-arrow-up mr-1"></i>{{ recent_registrations }}
+                        </span>
+                        <span class="text-gray-400 text-sm ml-2">new this month</span>
+                    </div>
+                </div>
+
+                <!-- Admin Users -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Administrators</p>
+                            <p class="text-3xl font-bold text-intellilearn-white">{{ admin_users }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-gray-400 text-sm">System administrators</span>
+                    </div>
+                </div>
+
+                <!-- Mentors -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Mentors</p>
+                            <p class="text-3xl font-bold text-intellilearn-white">{{ mentor_users }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-chalkboard-teacher text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-gray-400 text-sm">Course instructors</span>
+                    </div>
+                </div>
+
+                <!-- Learners -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Learners</p>
+                            <p class="text-3xl font-bold text-intellilearn-white">{{ learner_users }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-graduation-cap text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-gray-400 text-sm">Active students</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Statistics -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-intellilearn-white mb-6">Content Statistics</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Courses -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Total Courses</p>
+                            <p class="text-3xl font-bold text-intellilearn-white">{{ total_courses }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-book text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-400 text-sm">{{ published_courses }} published</span>
+                        <span class="text-gray-400 text-sm ml-2">{{ draft_courses }} draft</span>
+                    </div>
+                </div>
+
+                <!-- Quizzes -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Total Quizzes</p>
+                            <p class="text-3xl font-bold text-intellilearn-white">{{ total_quizzes }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-question-circle text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-blue-400 text-sm">{{ total_quiz_attempts }} attempts</span>
+                    </div>
+                </div>
+
+                <!-- Categories -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Categories</p>
+                            <p class="text-3xl font-bold text-intellilearn-white">{{ total_categories }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-tags text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-gray-400 text-sm">Course categories</span>
+                    </div>
+                </div>
+
+                <!-- Average Score -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Avg Quiz Score</p>
+                            <p class="text-3xl font-bold text-intellilearn-white">{{ avg_quiz_score }}%</p>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-chart-line text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-gray-400 text-sm">{{ completed_attempts }} completed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Level Distribution -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <h3 class="text-lg font-bold text-intellilearn-white mb-4">Learning Level Distribution</h3>
+                <div class="space-y-4">
+                    {% for level in level_distribution %}
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                {% if level.learning_level == 'beginner' %}
+                                    <div class="w-4 h-4 bg-green-500 rounded-full"></div>
+                                    <span class="text-intellilearn-white">Beginner</span>
+                                {% elif level.learning_level == 'intermediate' %}
+                                    <div class="w-4 h-4 bg-yellow-500 rounded-full"></div>
+                                    <span class="text-intellilearn-white">Intermediate</span>
+                                {% elif level.learning_level == 'advanced' %}
+                                    <div class="w-4 h-4 bg-red-500 rounded-full"></div>
+                                    <span class="text-intellilearn-white">Advanced</span>
+                                {% else %}
+                                    <div class="w-4 h-4 bg-gray-500 rounded-full"></div>
+                                    <span class="text-intellilearn-white">{{ level.learning_level|title }}</span>
+                                {% endif %}
+                            </div>
+                            <span class="text-gray-400">{{ level.count }} users</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <h3 class="text-lg font-bold text-intellilearn-white mb-4">Recent Activity (Last 7 Days)</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-question-circle text-white"></i>
+                            </div>
+                            <div>
+                                <span class="text-intellilearn-white">Quiz Attempts</span>
+                                <p class="text-gray-400 text-sm">Users taking quizzes</p>
+                            </div>
+                        </div>
+                        <span class="text-2xl font-bold text-intellilearn-white">{{ recent_quiz_attempts }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-trophy text-white"></i>
+                            </div>
+                            <div>
+                                <span class="text-intellilearn-white">Badges Awarded</span>
+                                <p class="text-gray-400 text-sm">New achievements</p>
+                            </div>
+                        </div>
+                        <span class="text-2xl font-bold text-intellilearn-white">{{ recent_badge_awards }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-user-plus text-white"></i>
+                            </div>
+                            <div>
+                                <span class="text-intellilearn-white">New Users</span>
+                                <p class="text-gray-400 text-sm">Recent registrations</p>
+                            </div>
+                        </div>
+                        <span class="text-2xl font-bold text-intellilearn-white">{{ recent_registrations }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Performers -->
+        <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+            <h3 class="text-lg font-bold text-intellilearn-white mb-4">Top Performers</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-intellilearn-gray-dark">
+                            <th class="text-left py-3 text-gray-400">Rank</th>
+                            <th class="text-left py-3 text-gray-400">User</th>
+                            <th class="text-left py-3 text-gray-400">Level</th>
+                            <th class="text-left py-3 text-gray-400">Points</th>
+                            <th class="text-left py-3 text-gray-400">Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for learner in top_learners %}
+                            <tr class="border-b border-intellilearn-gray-dark/50">
+                                <td class="py-3">
+                                    <span class="text-intellilearn-white font-bold">{{ forloop.counter }}</span>
+                                </td>
+                                <td class="py-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-intellilearn-red rounded-full flex items-center justify-center">
+                                            <span class="text-white text-sm">{{ learner.first_name.0|default:learner.username.0|upper }}</span>
+                                        </div>
+                                        <span class="text-intellilearn-white">{{ learner.first_name|default:learner.username }}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3">
+                                    <span class="text-gray-400">{{ learner.learning_level|title }}</span>
+                                </td>
+                                <td class="py-3">
+                                    <span class="text-yellow-400 font-bold">{{ learner.total_points }}</span>
+                                </td>
+                                <td class="py-3">
+                                    <span class="text-gray-400">{{ learner.date_joined|date:"M d, Y" }}</span>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="py-4 text-center text-gray-400">No learners yet</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-8">
+            <h3 class="text-lg font-bold text-intellilearn-white mb-4">Quick Actions</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="{% url 'admin:index' %}" class="bg-intellilearn-red text-white p-4 rounded-lg hover:bg-red-600 transition-colors text-center">
+                    <i class="fas fa-cog text-2xl mb-2"></i>
+                    <div class="font-medium">Django Admin</div>
+                    <div class="text-sm opacity-75">Manage system settings</div>
+                </a>
+                <a href="{% url 'admin:accounts_user_changelist' %}" class="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition-colors text-center">
+                    <i class="fas fa-users text-2xl mb-2"></i>
+                    <div class="font-medium">Manage Users</div>
+                    <div class="text-sm opacity-75">View and edit users</div>
+                </a>
+                <a href="{% url 'admin:courses_course_changelist' %}" class="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition-colors text-center">
+                    <i class="fas fa-book text-2xl mb-2"></i>
+                    <div class="font-medium">Manage Courses</div>
+                    <div class="text-sm opacity-75">Add and edit courses</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

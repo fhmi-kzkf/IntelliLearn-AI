@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block title %}Quizzes - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-intellilearn-white">AI Quizzes</h1>
+                    <p class="text-gray-400 mt-2">
+                        Test your knowledge with interactive quizzes designed to reinforce your AI learning.
+                    </p>
+                </div>
+                {% if user.is_authenticated and user.is_mentor %}
+                    <div class="mt-4 lg:mt-0">
+                        <a href="{% url 'quizzes:create' %}" 
+                           class="bg-intellilearn-red text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors font-medium">
+                            <i class="fas fa-plus mr-2"></i>Create Quiz
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="bg-intellilearn-gray-medium rounded-lg p-6 mb-8 border border-intellilearn-gray-dark">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Search -->
+                <div class="md:col-span-2">
+                    <input type="text" name="search" placeholder="Search quizzes..." 
+                           value="{{ request.GET.search }}"
+                           class="w-full px-4 py-2 bg-intellilearn-gray-dark text-intellilearn-white border border-intellilearn-gray-dark rounded-lg focus:border-intellilearn-red focus:outline-none">
+                </div>
+                
+                <!-- Difficulty Filter -->
+                <div>
+                    <select name="difficulty" class="w-full px-4 py-2 bg-intellilearn-gray-dark text-intellilearn-white border border-intellilearn-gray-dark rounded-lg focus:border-intellilearn-red focus:outline-none">
+                        <option value="">All Difficulties</option>
+                        <option value="easy" {% if request.GET.difficulty == 'easy' %}selected{% endif %}>Easy</option>
+                        <option value="medium" {% if request.GET.difficulty == 'medium' %}selected{% endif %}>Medium</option>
+                        <option value="hard" {% if request.GET.difficulty == 'hard' %}selected{% endif %}>Hard</option>
+                    </select>
+                </div>
+                
+                <!-- Search Button -->
+                <div>
+                    <button type="submit" class="w-full bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Quiz Categories -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Machine Learning Quizzes -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-intellilearn-white font-semibold">Machine Learning</h3>
+                        <p class="text-gray-400 text-sm">12 quizzes available</p>
+                    </div>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Test your understanding of ML algorithms, supervised and unsupervised learning.</p>
+                <a href="?category=machine-learning" class="text-intellilearn-red hover:text-red-400 text-sm font-medium">
+                    Explore Quizzes <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+
+            <!-- Deep Learning Quizzes -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-project-diagram text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-intellilearn-white font-semibold">Deep Learning</h3>
+                        <p class="text-gray-400 text-sm">8 quizzes available</p>
+                    </div>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Challenge yourself with neural networks, CNNs, RNNs, and advanced architectures.</p>
+                <a href="?category=deep-learning" class="text-intellilearn-red hover:text-red-400 text-sm font-medium">
+                    Explore Quizzes <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+
+            <!-- NLP Quizzes -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-language text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-intellilearn-white font-semibold">Natural Language Processing</h3>
+                        <p class="text-gray-400 text-sm">6 quizzes available</p>
+                    </div>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Explore text processing, sentiment analysis, and language models.</p>
+                <a href="?category=nlp" class="text-intellilearn-red hover:text-red-400 text-sm font-medium">
+                    Explore Quizzes <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sample Quizzes (placeholder data) -->
+        <div class="space-y-6">
+            <!-- Quiz Card 1 -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-all duration-300">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-900 text-green-300">
+                                <i class="fas fa-signal mr-1"></i>Easy
+                            </span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-900 text-blue-300">
+                                <i class="fas fa-robot mr-1"></i>AI Generated
+                            </span>
+                            <span class="text-gray-400 text-sm">10 questions • 15 min</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-intellilearn-white mb-2">Introduction to Machine Learning</h3>
+                        <p class="text-gray-300 mb-3">
+                            Test your basic understanding of machine learning concepts, algorithms, and applications. 
+                            Perfect for beginners starting their AI journey.
+                        </p>
+                        
+                        <div class="flex items-center space-x-4 text-sm text-gray-400">
+                            <span><i class="fas fa-users mr-1"></i>234 attempts</span>
+                            <span><i class="fas fa-star mr-1"></i>4.8 average score</span>
+                            <span><i class="fas fa-clock mr-1"></i>Created 2 days ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 lg:mt-0 lg:ml-6">
+                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                            <a href="#" class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors text-center font-medium">
+                                <i class="fas fa-play mr-2"></i>Start Quiz
+                            </a>
+                            <a href="#" class="border border-intellilearn-red text-intellilearn-red px-6 py-2 rounded-lg hover:bg-intellilearn-red hover:text-white transition-colors text-center">
+                                <i class="fas fa-info-circle mr-2"></i>Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Card 2 -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-all duration-300">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-900 text-yellow-300">
+                                <i class="fas fa-signal mr-1"></i>Medium
+                            </span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-900 text-purple-300">
+                                <i class="fas fa-user-tie mr-1"></i>Mentor Created
+                            </span>
+                            <span class="text-gray-400 text-sm">15 questions • 25 min</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-intellilearn-white mb-2">Deep Learning Fundamentals</h3>
+                        <p class="text-gray-300 mb-3">
+                            Dive deeper into neural networks, backpropagation, and optimization techniques. 
+                            Suitable for intermediate learners.
+                        </p>
+                        
+                        <div class="flex items-center space-x-4 text-sm text-gray-400">
+                            <span><i class="fas fa-users mr-1"></i>156 attempts</span>
+                            <span><i class="fas fa-star mr-1"></i>4.5 average score</span>
+                            <span><i class="fas fa-clock mr-1"></i>Created 1 week ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 lg:mt-0 lg:ml-6">
+                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                            <a href="#" class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors text-center font-medium">
+                                <i class="fas fa-play mr-2"></i>Start Quiz
+                            </a>
+                            <a href="#" class="border border-intellilearn-red text-intellilearn-red px-6 py-2 rounded-lg hover:bg-intellilearn-red hover:text-white transition-colors text-center">
+                                <i class="fas fa-info-circle mr-2"></i>Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Card 3 -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-all duration-300">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-900 text-red-300">
+                                <i class="fas fa-signal mr-1"></i>Hard
+                            </span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-900 text-blue-300">
+                                <i class="fas fa-robot mr-1"></i>AI Generated
+                            </span>
+                            <span class="text-gray-400 text-sm">20 questions • 40 min</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-intellilearn-white mb-2">Advanced NLP with Transformers</h3>
+                        <p class="text-gray-300 mb-3">
+                            Master advanced natural language processing concepts including attention mechanisms, 
+                            BERT, GPT, and transformer architectures.
+                        </p>
+                        
+                        <div class="flex items-center space-x-4 text-sm text-gray-400">
+                            <span><i class="fas fa-users mr-1"></i>89 attempts</span>
+                            <span><i class="fas fa-star mr-1"></i>4.2 average score</span>
+                            <span><i class="fas fa-clock mr-1"></i>Created 3 days ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 lg:mt-0 lg:ml-6">
+                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                            <a href="#" class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors text-center font-medium">
+                                <i class="fas fa-play mr-2"></i>Start Quiz
+                            </a>
+                            <a href="#" class="border border-intellilearn-red text-intellilearn-red px-6 py-2 rounded-lg hover:bg-intellilearn-red hover:text-white transition-colors text-center">
+                                <i class="fas fa-info-circle mr-2"></i>Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-8">
+            <button class="bg-intellilearn-gray-medium text-intellilearn-white px-8 py-3 rounded-lg hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
+                <i class="fas fa-plus mr-2"></i>Load More Quizzes
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

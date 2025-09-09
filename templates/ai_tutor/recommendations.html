@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Recommendations - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-intellilearn-white">AI-Powered Recommendations</h1>
+            <p class="text-gray-400 mt-2">
+                Personalized learning suggestions based on your progress and interests
+            </p>
+        </div>
+        
+        <!-- Learning Path Recommendations -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-intellilearn-white mb-6">Recommended Learning Path</h2>
+            <div class="bg-gradient-to-r from-intellilearn-red/20 to-purple-600/20 rounded-lg p-6 border border-intellilearn-red/30">
+                <div class="flex items-start space-x-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-intellilearn-red to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-route text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-intellilearn-white mb-2">Intermediate AI Specialist Track</h3>
+                        <p class="text-gray-300 mb-4">
+                            Based on your current progress in machine learning basics, we recommend advancing to intermediate concepts. 
+                            This path will help you master neural networks and deep learning fundamentals.
+                        </p>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-purple-300 bg-purple-900/30 px-3 py-1 rounded-full">
+                                <i class="fas fa-clock mr-1"></i>8 weeks
+                            </span>
+                            <span class="text-sm text-blue-300 bg-blue-900/30 px-3 py-1 rounded-full">
+                                <i class="fas fa-star mr-1"></i>92% match
+                            </span>
+                            <span class="text-sm text-green-300 bg-green-900/30 px-3 py-1 rounded-full">
+                                <i class="fas fa-users mr-1"></i>1,234 learners
+                            </span>
+                        </div>
+                        <div class="mt-4 flex space-x-3">
+                            <button class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                                Start Learning Path
+                            </button>
+                            <button class="border border-intellilearn-red text-intellilearn-red px-6 py-2 rounded-lg hover:bg-intellilearn-red hover:text-white transition-colors">
+                                Learn More
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Course Recommendations -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-intellilearn-white mb-6">Recommended Courses</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-xl"></i>
+                        </div>
+                        <span class="text-xs text-green-400 bg-green-900/30 px-2 py-1 rounded-full">95% match</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-intellilearn-white mb-2">Neural Networks Deep Dive</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Master the fundamentals of neural networks, from perceptrons to multi-layer architectures.
+                    </p>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="text-xs text-gray-300 bg-intellilearn-gray-dark px-2 py-1 rounded">Intermediate</span>
+                        <span class="text-xs text-gray-300 bg-intellilearn-gray-dark px-2 py-1 rounded">4 hours</span>
+                        <span class="text-xs text-gray-300 bg-intellilearn-gray-dark px-2 py-1 rounded">8 lessons</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1">
+                            Enroll Now
+                        </button>
+                        <button class="border border-intellilearn-gray-dark text-gray-400 px-3 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
+                            <i class="fas fa-bookmark"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-code text-white text-xl"></i>
+                        </div>
+                        <span class="text-xs text-blue-400 bg-blue-900/30 px-2 py-1 rounded-full">88% match</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-intellilearn-white mb-2">Python for AI Development</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Learn Python programming specifically for AI and machine learning applications.
+                    </p>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="text-xs text-gray-300 bg-intellilearn-gray-dark px-2 py-1 rounded">Beginner</span>
+                        <span class="text-xs text-gray-300 bg-intellilearn-gray-dark px-2 py-1 rounded">6 hours</span>
+                        <span class="text-xs text-gray-300 bg-intellilearn-gray-dark px-2 py-1 rounded">12 lessons</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1">
+                            Enroll Now
+                        </button>
+                        <button class="border border-intellilearn-gray-dark text-gray-400 px-3 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
+                            <i class="fas fa-bookmark"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-chart-line text-white text-xl"></i>
+                        </div>
+                        <span class="text-xs text-yellow-400 bg-yellow-900/30 px-2 py-1 rounded-full">82% match</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-intellilearn-white mb-2">Data Science Fundamentals</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Understand data analysis, visualization, and statistical concepts for AI.
+                    </p>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="text-xs text-gray-300 bg-intellilearn-gray-dark px-2 py-1 rounded">Intermediate</span>
+                        <span class="text-xs text-gray-300 bg-intellilearn-gray-dark px-2 py-1 rounded">5 hours</span>
+                        <span class="text-xs text-gray-300 bg-intellilearn-gray-dark px-2 py-1 rounded">10 lessons</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1">
+                            Enroll Now
+                        </button>
+                        <button class="border border-intellilearn-gray-dark text-gray-400 px-3 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
+                            <i class="fas fa-bookmark"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Practice Recommendations -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-intellilearn-white mb-6">Recommended Practice</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-question-circle text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-intellilearn-white">Quiz: Machine Learning Basics</h3>
+                            <p class="text-gray-400 text-sm">Test your understanding of ML concepts</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs text-orange-300 bg-orange-900/30 px-2 py-1 rounded-full">10 questions</span>
+                            <span class="text-xs text-blue-300 bg-blue-900/30 px-2 py-1 rounded-full">5 min</span>
+                        </div>
+                        <span class="text-sm text-green-400">+100 points</span>
+                    </div>
+                    <button class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors w-full">
+                        Start Quiz
+                    </button>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-code text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-intellilearn-white">Coding Challenge: Linear Regression</h3>
+                            <p class="text-gray-400 text-sm">Implement a simple linear regression model</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs text-teal-300 bg-teal-900/30 px-2 py-1 rounded-full">Python</span>
+                            <span class="text-xs text-purple-300 bg-purple-900/30 px-2 py-1 rounded-full">30 min</span>
+                        </div>
+                        <span class="text-sm text-green-400">+200 points</span>
+                    </div>
+                    <button class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors w-full">
+                        Start Challenge
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AI Insights -->
+        <div class="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-700 rounded-lg p-6">
+            <h2 class="text-xl font-bold text-purple-300 mb-4 flex items-center">
+                <i class="fas fa-lightbulb mr-3"></i>
+                AI Learning Insights
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-purple-300 mb-2">78%</div>
+                    <div class="text-sm text-gray-300">Learning efficiency compared to peers</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-300 mb-2">Neural Networks</div>
+                    <div class="text-sm text-gray-300">Your strongest topic</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-green-300 mb-2">Morning</div>
+                    <div class="text-sm text-gray-300">Your most productive learning time</div>
+                </div>
+            </div>
+            <div class="mt-6 p-4 bg-purple-900/20 border border-purple-600 rounded-lg">
+                <h4 class="text-purple-300 font-medium mb-2">💡 Personalized Tip</h4>
+                <p class="text-gray-300 text-sm">
+                    You perform 23% better on visual learning materials. Consider exploring our interactive diagrams and video content for neural networks.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

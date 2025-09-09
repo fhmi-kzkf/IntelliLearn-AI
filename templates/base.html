@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}IntelliLearn AI - AI Learning Platform{% endblock %}</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom styles for IntelliLearn -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'intellilearn': {
+                            'black': '#0B0B0D',
+                            'red': '#E02424',
+                            'white': '#FFFFFF',
+                            'gray-dark': '#1F1F23',
+                            'gray-medium': '#2A2A2E',
+                            'gray-light': '#F8F9FA'
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="h-full bg-intellilearn-black text-intellilearn-white font-sans">
+    <!-- Navigation -->
+    <nav class="bg-intellilearn-gray-dark shadow-lg border-b border-intellilearn-gray-medium">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo and brand -->
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-intellilearn-red rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-lg"></i>
+                        </div>
+                        <span class="text-xl font-bold text-intellilearn-white">IntelliLearn AI</span>
+                    </a>
+                </div>
+                
+                <!-- Navigation links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="text-intellilearn-white hover:text-intellilearn-red transition-colors">
+                            <i class="fas fa-tachometer-alt mr-2"></i>{% if user.is_superuser or user.role == 'admin' %}Admin Dashboard{% else %}Dashboard{% endif %}
+                        </a>
+                        <a href="{% url 'courses:list' %}" class="text-intellilearn-white hover:text-intellilearn-red transition-colors">
+                            <i class="fas fa-book mr-2"></i>Courses
+                        </a>
+                        <a href="{% url 'quizzes:list' %}" class="text-intellilearn-white hover:text-intellilearn-red transition-colors">
+                            <i class="fas fa-question-circle mr-2"></i>Quizzes
+                        </a>
+                        <a href="{% url 'ai_tutor:chat' %}" class="text-intellilearn-white hover:text-intellilearn-red transition-colors">
+                            <i class="fas fa-robot mr-2"></i>AI Tutor
+                        </a>
+                        
+                        <!-- User dropdown -->
+                        <div class="relative ml-3" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center space-x-2 text-intellilearn-white hover:text-intellilearn-red transition-colors">
+                                <div class="w-8 h-8 bg-intellilearn-red rounded-full flex items-center justify-center">
+                                    <span class="text-sm font-medium">{{ user.first_name.0|default:user.username.0|upper }}</span>
+                                </div>
+                                <span class="hidden lg:block">{{ user.first_name|default:user.username }}</span>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            
+                            <div x-show="open" @click.away="open = false" 
+                                 class="absolute right-0 mt-2 w-48 bg-intellilearn-gray-medium rounded-md shadow-lg py-1 z-50">
+                                <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-sm text-intellilearn-white hover:bg-intellilearn-gray-dark">
+                                    <i class="fas fa-user mr-2"></i>Profile
+                                </a>
+                                <a href="{% url 'accounts:settings' %}" class="block px-4 py-2 text-sm text-intellilearn-white hover:bg-intellilearn-gray-dark">
+                                    <i class="fas fa-cog mr-2"></i>Settings
+                                </a>
+                                {% if user.is_mentor or user.is_admin_user %}
+                                    <a href="{% url 'admin:index' %}" class="block px-4 py-2 text-sm text-intellilearn-white hover:bg-intellilearn-gray-dark">
+                                        <i class="fas fa-tools mr-2"></i>Admin
+                                    </a>
+                                {% endif %}
+                                <hr class="my-1 border-intellilearn-gray-dark">
+                                <form method="post" action="{% url 'accounts:logout' %}" class="block">
+                                    {% csrf_token %}
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-intellilearn-white hover:bg-intellilearn-gray-dark">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Points display -->
+                        <div class="flex items-center space-x-2 bg-intellilearn-gray-medium px-3 py-1 rounded-full">
+                            <i class="fas fa-coins text-yellow-400"></i>
+                            <span class="text-sm font-medium">{{ user.total_points }}</span>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" class="text-intellilearn-white hover:text-intellilearn-red transition-colors">
+                            Login
+                        </a>
+                        <a href="{% url 'accounts:register' %}" class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                            Get Started
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <!-- Mobile points display -->
+                        <div class="flex items-center space-x-2 bg-intellilearn-gray-medium px-3 py-1 rounded-full">
+                            <i class="fas fa-coins text-yellow-400 text-sm"></i>
+                            <span class="text-xs font-medium">{{ user.total_points }}</span>
+                        </div>
+                    {% endif %}
+                    <button x-data="{ open: false }" @click="open = !open; $refs.mobileMenu.classList.toggle('hidden')" class="text-intellilearn-white p-2">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div x-ref="mobileMenu" class="hidden md:hidden bg-intellilearn-gray-medium">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="block px-3 py-2 text-intellilearn-white hover:bg-intellilearn-gray-dark rounded-md">
+                        <i class="fas fa-tachometer-alt mr-2"></i>{% if user.is_superuser or user.role == 'admin' %}Admin Dashboard{% else %}Dashboard{% endif %}
+                    </a>
+                    <a href="{% url 'courses:list' %}" class="block px-3 py-2 text-intellilearn-white hover:bg-intellilearn-gray-dark rounded-md">
+                        <i class="fas fa-book mr-2"></i>Courses
+                    </a>
+                    <a href="{% url 'quizzes:list' %}" class="block px-3 py-2 text-intellilearn-white hover:bg-intellilearn-gray-dark rounded-md">
+                        <i class="fas fa-question-circle mr-2"></i>Quizzes
+                    </a>
+                    <a href="{% url 'ai_tutor:chat' %}" class="block px-3 py-2 text-intellilearn-white hover:bg-intellilearn-gray-dark rounded-md">
+                        <i class="fas fa-robot mr-2"></i>AI Tutor
+                    </a>
+                    <hr class="my-2 border-intellilearn-gray-dark">
+                    <a href="{% url 'accounts:profile' %}" class="block px-3 py-2 text-intellilearn-white hover:bg-intellilearn-gray-dark rounded-md">
+                        <i class="fas fa-user mr-2"></i>Profile
+                    </a>
+                    <form method="post" action="{% url 'accounts:logout' %}" class="block">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full text-left px-3 py-2 text-intellilearn-white hover:bg-intellilearn-gray-dark rounded-md">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="block px-3 py-2 text-intellilearn-white hover:bg-intellilearn-gray-dark rounded-md">
+                        Login
+                    </a>
+                    <a href="{% url 'accounts:register' %}" class="block px-3 py-2 bg-intellilearn-red text-white rounded-md">
+                        Get Started
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Messages -->
+    {% if messages %}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-900 border border-red-700 text-red-100{% elif message.tags == 'warning' %}bg-yellow-900 border border-yellow-700 text-yellow-100{% elif message.tags == 'success' %}bg-green-900 border border-green-700 text-green-100{% else %}bg-blue-900 border border-blue-700 text-blue-100{% endif %}">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas {% if message.tags == 'error' %}fa-exclamation-triangle{% elif message.tags == 'warning' %}fa-exclamation-circle{% elif message.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %} mr-2"></i>
+                            {{ message }}
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="text-current hover:opacity-75">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <!-- Main content -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-intellilearn-gray-dark border-t border-intellilearn-gray-medium mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- About -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-intellilearn-red rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-lg"></i>
+                        </div>
+                        <span class="text-xl font-bold text-intellilearn-white">IntelliLearn AI</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Platform pembelajaran AI untuk semua tingkatan. Belajar AI dengan efektif melalui micro-learning, 
+                        quiz interaktif, dan dukungan AI tutor personal.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-intellilearn-red transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-intellilearn-red transition-colors">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-intellilearn-red transition-colors">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-intellilearn-white font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'courses:list' %}" class="text-gray-400 hover:text-intellilearn-red transition-colors">Courses</a></li>
+                        <li><a href="{% url 'quizzes:list' %}" class="text-gray-400 hover:text-intellilearn-red transition-colors">Quizzes</a></li>
+                        <li><a href="{% url 'ai_tutor:chat' %}" class="text-gray-400 hover:text-intellilearn-red transition-colors">AI Tutor</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-intellilearn-red transition-colors">Leaderboard</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Support -->
+                <div>
+                    <h3 class="text-intellilearn-white font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-intellilearn-red transition-colors">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-intellilearn-red transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-intellilearn-red transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-intellilearn-red transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="border-intellilearn-gray-medium my-8">
+            
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">
+                    &copy; 2024 IntelliLearn AI. All rights reserved.
+                </p>
+                <p class="text-gray-400 text-sm mt-2 md:mt-0">
+                    Made with <i class="fas fa-heart text-intellilearn-red"></i> for AI learners
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Alpine.js for interactive components -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

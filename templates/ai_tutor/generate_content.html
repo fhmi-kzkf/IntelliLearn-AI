@@ -1,0 +1,386 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Content Generator - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-intellilearn-white">AI Content Generator</h1>
+            <p class="text-gray-400 mt-2">
+                Generate personalized learning content, quizzes, and explanations using AI
+            </p>
+        </div>
+        
+        <!-- Content Generation Tools -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Quick Generation -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <h2 class="text-xl font-bold text-intellilearn-white mb-4">Quick Content Generation</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-intellilearn-white text-sm font-medium mb-2">Content Type</label>
+                        <select class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark">
+                            <option value="explanation">Explanation</option>
+                            <option value="quiz">Quiz Questions</option>
+                            <option value="summary">Summary</option>
+                            <option value="examples">Code Examples</option>
+                            <option value="analogy">Simple Analogies</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-intellilearn-white text-sm font-medium mb-2">Topic</label>
+                        <input 
+                            type="text" 
+                            placeholder="e.g., Neural Networks, Machine Learning, Deep Learning..."
+                            class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark"
+                        />
+                    </div>
+                    
+                    <div>
+                        <label class="block text-intellilearn-white text-sm font-medium mb-2">Difficulty Level</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="difficulty" value="beginner" class="text-intellilearn-red" checked>
+                                <span class="ml-2 text-intellilearn-white">Beginner</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="difficulty" value="intermediate" class="text-intellilearn-red">
+                                <span class="ml-2 text-intellilearn-white">Intermediate</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="difficulty" value="advanced" class="text-intellilearn-red">
+                                <span class="ml-2 text-intellilearn-white">Advanced</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-intellilearn-red text-white py-3 rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-magic mr-2"></i>Generate Content
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Advanced Options -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <h2 class="text-xl font-bold text-intellilearn-white mb-4">Advanced Options</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-intellilearn-white text-sm font-medium mb-2">Content Length</label>
+                        <select class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark">
+                            <option value="short">Short (1-2 paragraphs)</option>
+                            <option value="medium">Medium (3-5 paragraphs)</option>
+                            <option value="long">Long (6+ paragraphs)</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-intellilearn-white text-sm font-medium mb-2">Include</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-intellilearn-red" checked>
+                                <span class="ml-2 text-intellilearn-white">Code Examples</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-intellilearn-red">
+                                <span class="ml-2 text-intellilearn-white">Visual Diagrams</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-intellilearn-red" checked>
+                                <span class="ml-2 text-intellilearn-white">Real-world Examples</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-intellilearn-red">
+                                <span class="ml-2 text-intellilearn-white">Practice Exercises</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-intellilearn-white text-sm font-medium mb-2">Learning Style</label>
+                        <select class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark">
+                            <option value="visual">Visual Learner</option>
+                            <option value="auditory">Auditory Learner</option>
+                            <option value="kinesthetic">Hands-on Learner</option>
+                            <option value="reading">Reading/Writing Learner</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Generate Buttons -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-intellilearn-white mb-4">Quick Generate</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button class="bg-blue-500/20 border border-blue-500 text-blue-300 p-4 rounded-lg hover:bg-blue-500/30 transition-colors">
+                    <i class="fas fa-brain text-2xl mb-2"></i>
+                    <div class="text-sm font-medium">ML Explanation</div>
+                </button>
+                <button class="bg-green-500/20 border border-green-500 text-green-300 p-4 rounded-lg hover:bg-green-500/30 transition-colors">
+                    <i class="fas fa-question-circle text-2xl mb-2"></i>
+                    <div class="text-sm font-medium">Quiz Generator</div>
+                </button>
+                <button class="bg-purple-500/20 border border-purple-500 text-purple-300 p-4 rounded-lg hover:bg-purple-500/30 transition-colors">
+                    <i class="fas fa-code text-2xl mb-2"></i>
+                    <div class="text-sm font-medium">Code Examples</div>
+                </button>
+                <button class="bg-yellow-500/20 border border-yellow-500 text-yellow-300 p-4 rounded-lg hover:bg-yellow-500/30 transition-colors">
+                    <i class="fas fa-lightbulb text-2xl mb-2"></i>
+                    <div class="text-sm font-medium">Simple Analogies</div>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Generated Content Display -->
+        <div id="generatedContent" class="hidden mb-8">
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-intellilearn-white">Generated Content</h2>
+                    <div class="flex space-x-2">
+                        <button class="bg-intellilearn-gray-dark text-intellilearn-white px-3 py-1 rounded hover:bg-intellilearn-gray-dark/70 transition-colors">
+                            <i class="fas fa-copy mr-1"></i>Copy
+                        </button>
+                        <button class="bg-intellilearn-gray-dark text-intellilearn-white px-3 py-1 rounded hover:bg-intellilearn-gray-dark/70 transition-colors">
+                            <i class="fas fa-download mr-1"></i>Export
+                        </button>
+                        <button class="bg-intellilearn-red text-white px-3 py-1 rounded hover:bg-red-600 transition-colors">
+                            <i class="fas fa-save mr-1"></i>Save
+                        </button>
+                    </div>
+                </div>
+                <div id="contentDisplay" class="bg-intellilearn-gray-dark rounded-lg p-4 text-intellilearn-white">
+                    <!-- Generated content will appear here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Generations -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-intellilearn-white mb-4">Recent Generations</h2>
+            <div class="space-y-4">
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-intellilearn-white font-medium">Neural Networks Explanation</h3>
+                        <span class="text-xs text-gray-400">2 hours ago</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-3">
+                        An explanation of neural networks for beginner level, including basic concepts and real-world examples.
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex space-x-2">
+                            <span class="text-xs bg-blue-900/30 text-blue-300 px-2 py-1 rounded">Explanation</span>
+                            <span class="text-xs bg-green-900/30 text-green-300 px-2 py-1 rounded">Beginner</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-400 hover:text-intellilearn-white transition-colors">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-intellilearn-white transition-colors">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-intellilearn-red transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-intellilearn-white font-medium">Machine Learning Quiz - 10 Questions</h3>
+                        <span class="text-xs text-gray-400">1 day ago</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-3">
+                        A quiz covering basic machine learning concepts including supervised and unsupervised learning.
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex space-x-2">
+                            <span class="text-xs bg-purple-900/30 text-purple-300 px-2 py-1 rounded">Quiz</span>
+                            <span class="text-xs bg-yellow-900/30 text-yellow-300 px-2 py-1 rounded">Intermediate</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-400 hover:text-intellilearn-white transition-colors">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-intellilearn-white transition-colors">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-intellilearn-red transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-intellilearn-white font-medium">Python Linear Regression Code</h3>
+                        <span class="text-xs text-gray-400">3 days ago</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-3">
+                        Code examples showing how to implement linear regression using Python and scikit-learn.
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex space-x-2">
+                            <span class="text-xs bg-teal-900/30 text-teal-300 px-2 py-1 rounded">Code</span>
+                            <span class="text-xs bg-green-900/30 text-green-300 px-2 py-1 rounded">Beginner</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-400 hover:text-intellilearn-white transition-colors">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-intellilearn-white transition-colors">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-intellilearn-red transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Templates -->
+        <div>
+            <h2 class="text-xl font-bold text-intellilearn-white mb-4">Content Templates</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors cursor-pointer">
+                    <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fas fa-book text-white"></i>
+                    </div>
+                    <h3 class="text-intellilearn-white font-medium mb-2">Concept Explanation</h3>
+                    <p class="text-gray-400 text-sm">Generate clear explanations for AI concepts</p>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors cursor-pointer">
+                    <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fas fa-list-ul text-white"></i>
+                    </div>
+                    <h3 class="text-intellilearn-white font-medium mb-2">Step-by-Step Guide</h3>
+                    <p class="text-gray-400 text-sm">Create detailed implementation guides</p>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors cursor-pointer">
+                    <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fas fa-chart-bar text-white"></i>
+                    </div>
+                    <h3 class="text-intellilearn-white font-medium mb-2">Comparison Table</h3>
+                    <p class="text-gray-400 text-sm">Compare different algorithms or techniques</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Sample AI content generation responses
+    const sampleContent = {
+        explanation: `
+            <h3 class="text-lg font-bold text-intellilearn-white mb-3">Neural Networks Explained</h3>
+            <p class="text-gray-300 mb-4">
+                Neural networks are computing systems inspired by biological neural networks found in animal brains. 
+                They consist of interconnected nodes (neurons) that work together to process information and learn patterns from data.
+            </p>
+            <h4 class="text-md font-semibold text-intellilearn-white mb-2">Key Components:</h4>
+            <ul class="text-gray-300 mb-4 list-disc list-inside">
+                <li><strong>Neurons (Nodes):</strong> Basic processing units that receive input, apply a function, and produce output</li>
+                <li><strong>Layers:</strong> Groups of neurons organized in input, hidden, and output layers</li>
+                <li><strong>Weights:</strong> Parameters that determine the strength of connections between neurons</li>
+                <li><strong>Activation Functions:</strong> Mathematical functions that determine neuron output</li>
+            </ul>
+            <div class="bg-intellilearn-gray-medium p-3 rounded-lg mb-4">
+                <code class="text-green-400">
+                    # Simple neural network example<br>
+                    import numpy as np<br>
+                    <br>
+                    # Input data<br>
+                    X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])<br>
+                    y = np.array([[0], [1], [1], [0]])  # XOR function<br>
+                </code>
+            </div>
+        `,
+        quiz: `
+            <h3 class="text-lg font-bold text-intellilearn-white mb-3">Machine Learning Quiz</h3>
+            <div class="space-y-4">
+                <div class="bg-intellilearn-gray-dark p-4 rounded-lg">
+                    <p class="text-intellilearn-white font-medium mb-3">1. What is the main difference between supervised and unsupervised learning?</p>
+                    <div class="space-y-2">
+                        <label class="flex items-center text-gray-300">
+                            <input type="radio" name="q1" class="mr-2"> Supervised learning uses labeled data, unsupervised learning does not
+                        </label>
+                        <label class="flex items-center text-gray-300">
+                            <input type="radio" name="q1" class="mr-2"> Supervised learning is faster than unsupervised learning
+                        </label>
+                        <label class="flex items-center text-gray-300">
+                            <input type="radio" name="q1" class="mr-2"> There is no difference between them
+                        </label>
+                    </div>
+                </div>
+                <div class="bg-intellilearn-gray-dark p-4 rounded-lg">
+                    <p class="text-intellilearn-white font-medium mb-3">2. Which algorithm is commonly used for classification tasks?</p>
+                    <div class="space-y-2">
+                        <label class="flex items-center text-gray-300">
+                            <input type="radio" name="q2" class="mr-2"> Linear Regression
+                        </label>
+                        <label class="flex items-center text-gray-300">
+                            <input type="radio" name="q2" class="mr-2"> Decision Tree
+                        </label>
+                        <label class="flex items-center text-gray-300">
+                            <input type="radio" name="q2" class="mr-2"> K-means Clustering
+                        </label>
+                    </div>
+                </div>
+            </div>
+        `
+    };
+    
+    function generateContent() {
+        const contentType = document.querySelector('select').value;
+        const topic = document.querySelector('input[type="text"]').value;
+        
+        if (!topic) {
+            alert('Please enter a topic first');
+            return;
+        }
+        
+        // Show loading state
+        const button = event.target;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generating...';
+        button.disabled = true;
+        
+        // Simulate AI generation delay
+        setTimeout(() => {
+            const contentDisplay = document.getElementById('contentDisplay');
+            const generatedContent = document.getElementById('generatedContent');
+            
+            // Display generated content
+            contentDisplay.innerHTML = sampleContent[contentType] || sampleContent.explanation;
+            generatedContent.classList.remove('hidden');
+            
+            // Reset button
+            button.innerHTML = originalText;
+            button.disabled = false;
+            
+            // Scroll to generated content
+            generatedContent.scrollIntoView({ behavior: 'smooth' });
+        }, 2000);
+    }
+    
+    // Add event listener to generate button
+    document.addEventListener('DOMContentLoaded', function() {
+        const generateBtn = document.querySelector('button[onclick*="Generate"]');
+        if (generateBtn) {
+            generateBtn.onclick = generateContent;
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+
+{% block title %}Account Settings - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'accounts:profile' %}" class="text-gray-400 hover:text-intellilearn-white transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Profile
+                </a>
+                <div>
+                    <h1 class="text-3xl font-bold text-intellilearn-white">Account Settings</h1>
+                    <p class="text-gray-400 mt-2">Manage your privacy, notifications, and account preferences</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Sections -->
+        <div class="space-y-8">
+            <!-- Notification Settings -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <h2 class="text-xl font-bold text-intellilearn-white mb-6">Notification Settings</h2>
+                
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="section" value="notifications">
+                    
+                    <div class="space-y-4">
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Course Updates</span>
+                                <p class="text-gray-400 text-sm">Get notified when new lessons or content is added to your courses</p>
+                            </div>
+                            <input type="checkbox" name="course_updates" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Quiz Reminders</span>
+                                <p class="text-gray-400 text-sm">Remind me about upcoming quizzes and assignments</p>
+                            </div>
+                            <input type="checkbox" name="quiz_reminders" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Achievement Notifications</span>
+                                <p class="text-gray-400 text-sm">Celebrate when you earn badges and reach milestones</p>
+                            </div>
+                            <input type="checkbox" name="achievements" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Weekly Progress Reports</span>
+                                <p class="text-gray-400 text-sm">Receive a summary of your learning progress each week</p>
+                            </div>
+                            <input type="checkbox" name="weekly_reports" class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Community Updates</span>
+                                <p class="text-gray-400 text-sm">Stay informed about community discussions and events</p>
+                            </div>
+                            <input type="checkbox" name="community_updates" class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                            Save Notification Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Privacy Settings -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <h2 class="text-xl font-bold text-intellilearn-white mb-6">Privacy Settings</h2>
+                
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="section" value="privacy">
+                    
+                    <div class="space-y-4">
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Public Profile</span>
+                                <p class="text-gray-400 text-sm">Allow other users to view your profile and learning activity</p>
+                            </div>
+                            <input type="checkbox" name="public_profile" class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Show on Leaderboard</span>
+                                <p class="text-gray-400 text-sm">Display your ranking and achievements on public leaderboards</p>
+                            </div>
+                            <input type="checkbox" name="show_leaderboard" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Share Learning Analytics</span>
+                                <p class="text-gray-400 text-sm">Help improve our AI tutor with anonymized learning data</p>
+                            </div>
+                            <input type="checkbox" name="share_analytics" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Course Recommendations</span>
+                                <p class="text-gray-400 text-sm">Allow AI to suggest courses based on your learning patterns</p>
+                            </div>
+                            <input type="checkbox" name="ai_recommendations" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                            Save Privacy Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Learning Preferences -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <h2 class="text-xl font-bold text-intellilearn-white mb-6">Learning Preferences</h2>
+                
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    <input type="hidden" name="section" value="learning">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-intellilearn-white mb-3">Preferred Learning Time</label>
+                        <select name="learning_time" class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark">
+                            <option value="morning">Morning (6 AM - 12 PM)</option>
+                            <option value="afternoon">Afternoon (12 PM - 6 PM)</option>
+                            <option value="evening">Evening (6 PM - 10 PM)</option>
+                            <option value="night">Night (10 PM - 6 AM)</option>
+                            <option value="flexible">Flexible</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-intellilearn-white mb-3">Session Duration</label>
+                        <select name="session_duration" class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark">
+                            <option value="5-10">5-10 minutes (Quick learning)</option>
+                            <option value="15-30" selected>15-30 minutes (Standard)</option>
+                            <option value="45-60">45-60 minutes (Deep focus)</option>
+                            <option value="60+">60+ minutes (Extended sessions)</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-intellilearn-white mb-3">Learning Style</label>
+                        <select name="learning_style" class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark">
+                            <option value="visual">Visual (diagrams, charts, images)</option>
+                            <option value="auditory">Auditory (videos, audio explanations)</option>
+                            <option value="kinesthetic">Hands-on (interactive exercises, coding)</option>
+                            <option value="reading">Reading/Writing (text-based content)</option>
+                            <option value="mixed">Mixed approach</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-intellilearn-white mb-3">Difficulty Progression</label>
+                        <select name="difficulty_progression" class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark">
+                            <option value="gradual">Gradual (step-by-step progression)</option>
+                            <option value="moderate" selected>Moderate (balanced challenge)</option>
+                            <option value="accelerated">Accelerated (faster progression)</option>
+                            <option value="adaptive">Adaptive (AI-determined pace)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                            Save Learning Preferences
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Account Security -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <h2 class="text-xl font-bold text-intellilearn-white mb-6">Account Security</h2>
+                
+                <div class="space-y-4">
+                    <a href="{% url 'accounts:change_password' %}" 
+                       class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg hover:bg-intellilearn-gray-dark/70 transition-colors">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-lock text-white"></i>
+                            </div>
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Change Password</span>
+                                <p class="text-gray-400 text-sm">Update your account password</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </a>
+                    
+                    <div class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-white"></i>
+                            </div>
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Two-Factor Authentication</span>
+                                <p class="text-gray-400 text-sm">Add an extra layer of security to your account</p>
+                            </div>
+                        </div>
+                        <button class="bg-intellilearn-red text-white px-4 py-2 rounded hover:bg-red-600 transition-colors text-sm">
+                            Enable
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-download text-white"></i>
+                            </div>
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Download My Data</span>
+                                <p class="text-gray-400 text-sm">Get a copy of your learning data and progress</p>
+                            </div>
+                        </div>
+                        <button class="bg-intellilearn-gray-medium text-intellilearn-white px-4 py-2 rounded hover:bg-intellilearn-gray-dark transition-colors text-sm border border-intellilearn-gray-dark">
+                            Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Danger Zone -->
+            <div class="bg-red-900/20 border border-red-700 rounded-lg p-6">
+                <h2 class="text-xl font-bold text-red-300 mb-6">Danger Zone</h2>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-red-900/30 rounded-lg">
+                        <div>
+                            <span class="text-red-300 font-medium">Deactivate Account</span>
+                            <p class="text-red-400 text-sm">Temporarily disable your account (can be reactivated)</p>
+                        </div>
+                        <button class="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition-colors text-sm">
+                            Deactivate
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-red-900/30 rounded-lg">
+                        <div>
+                            <span class="text-red-300 font-medium">Delete Account</span>
+                            <p class="text-red-400 text-sm">Permanently delete your account and all data (cannot be undone)</p>
+                        </div>
+                        <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors text-sm">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

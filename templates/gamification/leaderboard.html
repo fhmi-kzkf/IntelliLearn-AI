@@ -1,0 +1,402 @@
+{% extends 'base.html' %}
+
+{% block title %}Leaderboard - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-intellilearn-white mb-4">
+                <i class="fas fa-crown text-yellow-400 mr-3"></i>Leaderboard
+            </h1>
+            <p class="text-xl text-gray-300">
+                Compete with fellow AI learners and see how you stack up against the best!
+            </p>
+        </div>
+
+        <!-- Metric and Period Selectors -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Metric Selector -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <h3 class="text-lg font-semibold text-intellilearn-white mb-4">Ranking Metric</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="selectMetric('total_points')" class="metric-btn active bg-intellilearn-red text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                        <i class="fas fa-coins mr-2"></i>Total Points
+                    </button>
+                    <button onclick="selectMetric('courses_completed')" class="metric-btn bg-intellilearn-gray-dark text-intellilearn-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-graduation-cap mr-2"></i>Courses
+                    </button>
+                    <button onclick="selectMetric('quiz_average')" class="metric-btn bg-intellilearn-gray-dark text-intellilearn-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-brain mr-2"></i>Quiz Average
+                    </button>
+                    <button onclick="selectMetric('current_streak')" class="metric-btn bg-intellilearn-gray-dark text-intellilearn-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-fire mr-2"></i>Current Streak
+                    </button>
+                </div>
+            </div>
+
+            <!-- Period Selector -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <h3 class="text-lg font-semibold text-intellilearn-white mb-4">Time Period</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="selectPeriod('all_time')" class="period-btn active bg-intellilearn-red text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                        <i class="fas fa-infinity mr-2"></i>All Time
+                    </button>
+                    <button onclick="selectPeriod('monthly')" class="period-btn bg-intellilearn-gray-dark text-intellilearn-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-calendar-alt mr-2"></i>This Month
+                    </button>
+                    <button onclick="selectPeriod('weekly')" class="period-btn bg-intellilearn-gray-dark text-intellilearn-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-calendar-week mr-2"></i>This Week
+                    </button>
+                    <button onclick="selectPeriod('daily')" class="period-btn bg-intellilearn-gray-dark text-intellilearn-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-calendar-day mr-2"></i>Today
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current User Position -->
+        {% if user.is_authenticated %}
+        <div class="bg-gradient-to-r from-intellilearn-red/20 to-purple-600/20 rounded-lg p-6 mb-8 border border-intellilearn-red/30">
+            <div class="flex items-center space-x-4">
+                <div class="w-16 h-16 bg-intellilearn-red rounded-full flex items-center justify-center">
+                    <span class="text-2xl font-bold text-white">#15</span>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold text-intellilearn-white">Your Current Position</h3>
+                    <p class="text-gray-300">{{ user.first_name|default:user.username }} • {{ user.total_points|default:0 }} points</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-2xl font-bold text-intellilearn-red">1,250</div>
+                    <div class="text-sm text-gray-400">Total Points</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Leaderboard -->
+        <div class="bg-intellilearn-gray-medium rounded-lg border border-intellilearn-gray-dark overflow-hidden">
+            <!-- Header -->
+            <div class="bg-intellilearn-gray-dark px-6 py-4 border-b border-intellilearn-gray-medium">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-intellilearn-white">
+                        <span id="current-metric">Total Points</span> Rankings - <span id="current-period">All Time</span>
+                    </h3>
+                    <div class="text-sm text-gray-400">
+                        Last updated: 2 minutes ago
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Entries -->
+            <div class="divide-y divide-intellilearn-gray-dark">
+                <!-- Top 3 Winners -->
+                <!-- 1st Place -->
+                <div class="px-6 py-6 bg-gradient-to-r from-yellow-600/10 to-yellow-500/10">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+                                <span class="text-2xl font-bold text-white">1</span>
+                            </div>
+                            <div class="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+                                <i class="fas fa-crown text-yellow-800 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3">
+                                <h4 class="text-lg font-bold text-intellilearn-white">Sarah Chen</h4>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-900 text-yellow-300">
+                                    AI Master
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-gray-300 mt-1">
+                                <span><i class="fas fa-graduation-cap mr-1"></i>12 courses completed</span>
+                                <span><i class="fas fa-trophy mr-1"></i>28 badges earned</span>
+                                <span><i class="fas fa-fire mr-1"></i>45-day streak</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-yellow-400">5,840</div>
+                            <div class="text-sm text-gray-400">points</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2nd Place -->
+                <div class="px-6 py-6 bg-gradient-to-r from-gray-400/10 to-gray-300/10">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <div class="w-16 h-16 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center">
+                                <span class="text-2xl font-bold text-white">2</span>
+                            </div>
+                            <div class="absolute -top-2 -right-2 w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
+                                <i class="fas fa-medal text-gray-800 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3">
+                                <h4 class="text-lg font-bold text-intellilearn-white">Marcus Rodriguez</h4>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-900 text-blue-300">
+                                    Advanced
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-gray-300 mt-1">
+                                <span><i class="fas fa-graduation-cap mr-1"></i>10 courses completed</span>
+                                <span><i class="fas fa-trophy mr-1"></i>22 badges earned</span>
+                                <span><i class="fas fa-fire mr-1"></i>30-day streak</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-gray-400">4,920</div>
+                            <div class="text-sm text-gray-400">points</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3rd Place -->
+                <div class="px-6 py-6 bg-gradient-to-r from-yellow-700/10 to-yellow-600/10">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <div class="w-16 h-16 bg-gradient-to-br from-yellow-700 to-yellow-800 rounded-full flex items-center justify-center">
+                                <span class="text-2xl font-bold text-white">3</span>
+                            </div>
+                            <div class="absolute -top-2 -right-2 w-8 h-8 bg-yellow-700 rounded-full flex items-center justify-center">
+                                <i class="fas fa-award text-yellow-200 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3">
+                                <h4 class="text-lg font-bold text-intellilearn-white">Emily Watson</h4>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-900 text-purple-300">
+                                    Intermediate
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-gray-300 mt-1">
+                                <span><i class="fas fa-graduation-cap mr-1"></i>8 courses completed</span>
+                                <span><i class="fas fa-trophy mr-1"></i>15 badges earned</span>
+                                <span><i class="fas fa-fire mr-1"></i>21-day streak</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-yellow-600">4,520</div>
+                            <div class="text-sm text-gray-400">points</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Remaining Top 10 -->
+                <!-- 4th Place -->
+                <div class="px-6 py-4 hover:bg-intellilearn-gray-dark/50 transition-colors">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-intellilearn-gray-dark rounded-full flex items-center justify-center">
+                            <span class="text-lg font-bold text-intellilearn-white">4</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-intellilearn-white">Alex Thompson</h4>
+                            <div class="text-sm text-gray-400">7 courses • 12 badges • 18-day streak</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-intellilearn-white">3,890</div>
+                            <div class="text-xs text-gray-400">points</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5th Place -->
+                <div class="px-6 py-4 hover:bg-intellilearn-gray-dark/50 transition-colors">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-intellilearn-gray-dark rounded-full flex items-center justify-center">
+                            <span class="text-lg font-bold text-intellilearn-white">5</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-intellilearn-white">Priya Patel</h4>
+                            <div class="text-sm text-gray-400">6 courses • 14 badges • 25-day streak</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-intellilearn-white">3,650</div>
+                            <div class="text-xs text-gray-400">points</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6th-10th Places -->
+                <div class="px-6 py-4 hover:bg-intellilearn-gray-dark/50 transition-colors">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-intellilearn-gray-dark rounded-full flex items-center justify-center">
+                            <span class="text-lg font-bold text-intellilearn-white">6</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-intellilearn-white">David Kim</h4>
+                            <div class="text-sm text-gray-400">5 courses • 11 badges • 12-day streak</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-intellilearn-white">3,420</div>
+                            <div class="text-xs text-gray-400">points</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 py-4 hover:bg-intellilearn-gray-dark/50 transition-colors">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-intellilearn-gray-dark rounded-full flex items-center justify-center">
+                            <span class="text-lg font-bold text-intellilearn-white">7</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-intellilearn-white">Lisa Zhang</h4>
+                            <div class="text-sm text-gray-400">6 courses • 9 badges • 8-day streak</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-intellilearn-white">3,180</div>
+                            <div class="text-xs text-gray-400">points</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 py-4 hover:bg-intellilearn-gray-dark/50 transition-colors">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-intellilearn-gray-dark rounded-full flex items-center justify-center">
+                            <span class="text-lg font-bold text-intellilearn-white">8</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-intellilearn-white">James Wilson</h4>
+                            <div class="text-sm text-gray-400">4 courses • 8 badges • 15-day streak</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-intellilearn-white">2,950</div>
+                            <div class="text-xs text-gray-400">points</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 py-4 hover:bg-intellilearn-gray-dark/50 transition-colors">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-intellilearn-gray-dark rounded-full flex items-center justify-center">
+                            <span class="text-lg font-bold text-intellilearn-white">9</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-intellilearn-white">Maria Garcia</h4>
+                            <div class="text-sm text-gray-400">5 courses • 7 badges • 9-day streak</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-intellilearn-white">2,840</div>
+                            <div class="text-xs text-gray-400">points</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 py-4 hover:bg-intellilearn-gray-dark/50 transition-colors">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-intellilearn-gray-dark rounded-full flex items-center justify-center">
+                            <span class="text-lg font-bold text-intellilearn-white">10</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-intellilearn-white">Ahmed Hassan</h4>
+                            <div class="text-sm text-gray-400">4 courses • 10 badges • 6-day streak</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-intellilearn-white">2,720</div>
+                            <div class="text-xs text-gray-400">points</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More -->
+            <div class="px-6 py-4 bg-intellilearn-gray-dark border-t border-intellilearn-gray-medium">
+                <button class="w-full text-intellilearn-red hover:text-red-400 font-medium py-2 transition-colors">
+                    <i class="fas fa-chevron-down mr-2"></i>Show More Rankings
+                </button>
+            </div>
+        </div>
+
+        <!-- Achievement Spotlight -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Top Performer This Week -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-rocket text-white text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">Rising Star</h3>
+                <p class="text-gray-300 text-sm mb-3">Sarah Chen gained 850 points this week!</p>
+                <div class="text-green-400 font-medium">+85% increase</div>
+            </div>
+
+            <!-- Most Consistent -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-fire text-white text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">Streak Master</h3>
+                <p class="text-gray-300 text-sm mb-3">Marcus Rodriguez has the longest active streak</p>
+                <div class="text-orange-400 font-medium">45 days</div>
+            </div>
+
+            <!-- Quiz Champion -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-brain text-white text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">Quiz Champion</h3>
+                <p class="text-gray-300 text-sm mb-3">Emily Watson has the highest quiz average</p>
+                <div class="text-purple-400 font-medium">94.5%</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentMetric = 'total_points';
+    let currentPeriod = 'all_time';
+    
+    function selectMetric(metric) {
+        currentMetric = metric;
+        
+        // Update button states
+        document.querySelectorAll('.metric-btn').forEach(btn => {
+            btn.classList.remove('active', 'bg-intellilearn-red');
+            btn.classList.add('bg-intellilearn-gray-dark');
+        });
+        event.target.classList.add('active', 'bg-intellilearn-red');
+        event.target.classList.remove('bg-intellilearn-gray-dark');
+        
+        // Update header
+        const metricNames = {
+            'total_points': 'Total Points',
+            'courses_completed': 'Courses Completed',
+            'quiz_average': 'Quiz Average',
+            'current_streak': 'Current Streak'
+        };
+        document.getElementById('current-metric').textContent = metricNames[metric];
+        
+        // Here you would typically fetch new data
+        console.log('Selected metric:', metric);
+    }
+    
+    function selectPeriod(period) {
+        currentPeriod = period;
+        
+        // Update button states
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.classList.remove('active', 'bg-intellilearn-red');
+            btn.classList.add('bg-intellilearn-gray-dark');
+        });
+        event.target.classList.add('active', 'bg-intellilearn-red');
+        event.target.classList.remove('bg-intellilearn-gray-dark');
+        
+        // Update header
+        const periodNames = {
+            'all_time': 'All Time',
+            'monthly': 'This Month',
+            'weekly': 'This Week',
+            'daily': 'Today'
+        };
+        document.getElementById('current-period').textContent = periodNames[period];
+        
+        // Here you would typically fetch new data
+        console.log('Selected period:', period);
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8 sm:py-12 flex items-center">
+    <div class="max-w-md mx-auto px-4 sm:px-6 w-full">
+        <!-- Login Header -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-intellilearn-red rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-sign-in-alt text-white text-2xl"></i>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-intellilearn-white">Welcome Back</h1>
+            <p class="text-gray-400 mt-2 text-sm sm:text-base">
+                Continue your AI learning journey
+            </p>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="bg-intellilearn-gray-medium rounded-lg p-6 sm:p-8 border border-intellilearn-gray-dark">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label class="block text-sm font-medium text-intellilearn-white mb-2">Username or Email</label>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        required
+                        class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark"
+                        placeholder="Enter your username or email"
+                    />
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-intellilearn-white mb-2">Password</label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            name="password" 
+                            required
+                            id="passwordInput"
+                            class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark"
+                            placeholder="Enter your password"
+                        />
+                        <button 
+                            type="button" 
+                            onclick="togglePassword()"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-intellilearn-white transition-colors"
+                        >
+                            <i id="passwordToggleIcon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" name="remember_me" class="text-intellilearn-red focus:ring-intellilearn-red">
+                        <span class="ml-2 text-sm text-gray-300">Remember me</span>
+                    </label>
+                    <a href="{% url 'accounts:password_reset' %}" class="text-sm text-intellilearn-red hover:text-red-400">
+                        Forgot password?
+                    </a>
+                </div>
+                
+                <button 
+                    type="submit" 
+                    class="w-full bg-intellilearn-red text-white py-3 rounded-lg hover:bg-red-600 transition-colors font-medium text-lg"
+                >
+                    Sign In
+                </button>
+            </form>
+            
+            <!-- Divider -->
+            <div class="mt-6 relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-intellilearn-gray-dark"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-intellilearn-gray-medium text-gray-400">Or continue with</span>
+                </div>
+            </div>
+            
+            <!-- Social Login (placeholder) -->
+            <div class="mt-6 grid grid-cols-2 gap-3">
+                <button class="flex justify-center items-center px-4 py-2 border border-intellilearn-gray-dark rounded-lg bg-intellilearn-gray-dark hover:bg-intellilearn-gray-dark/70 transition-colors">
+                    <i class="fab fa-google text-white mr-2"></i>
+                    <span class="text-sm text-intellilearn-white">Google</span>
+                </button>
+                <button class="flex justify-center items-center px-4 py-2 border border-intellilearn-gray-dark rounded-lg bg-intellilearn-gray-dark hover:bg-intellilearn-gray-dark/70 transition-colors">
+                    <i class="fab fa-github text-white mr-2"></i>
+                    <span class="text-sm text-intellilearn-white">GitHub</span>
+                </button>
+            </div>
+            
+            <!-- Register Link -->
+            <div class="mt-6 text-center">
+                <p class="text-gray-400 text-sm">
+                    Don't have an account? 
+                    <a href="{% url 'accounts:register' %}" class="text-intellilearn-red hover:text-red-400 font-medium">
+                        Create one here
+                    </a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="mt-8 grid grid-cols-3 gap-4 text-center">
+            <div>
+                <div class="text-lg sm:text-xl font-bold text-intellilearn-white">50K+</div>
+                <div class="text-xs sm:text-sm text-gray-400">Active Learners</div>
+            </div>
+            <div>
+                <div class="text-lg sm:text-xl font-bold text-intellilearn-white">1000+</div>
+                <div class="text-xs sm:text-sm text-gray-400">AI Lessons</div>
+            </div>
+            <div>
+                <div class="text-lg sm:text-xl font-bold text-intellilearn-white">95%</div>
+                <div class="text-xs sm:text-sm text-gray-400">Success Rate</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('passwordInput');
+        const toggleIcon = document.getElementById('passwordToggleIcon');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.className = 'fas fa-eye-slash';
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.className = 'fas fa-eye';
+        }
+    }
+</script>
+{% endblock %}

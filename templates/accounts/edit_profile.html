@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'accounts:profile' %}" class="text-gray-400 hover:text-intellilearn-white transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Profile
+                </a>
+                <div>
+                    <h1 class="text-3xl font-bold text-intellilearn-white">Edit Profile</h1>
+                    <p class="text-gray-400 mt-2">Update your personal information and learning preferences</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Edit Form -->
+        <div class="bg-intellilearn-gray-medium rounded-lg p-8 border border-intellilearn-gray-dark">
+            <form method="post" class="space-y-8">
+                {% csrf_token %}
+                
+                <!-- Personal Information -->
+                <div>
+                    <h2 class="text-xl font-bold text-intellilearn-white mb-6">Personal Information</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-intellilearn-white mb-2">First Name</label>
+                            <input 
+                                type="text" 
+                                name="first_name" 
+                                value="{{ user.first_name }}"
+                                class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark"
+                                placeholder="Enter your first name"
+                            />
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-intellilearn-white mb-2">Last Name</label>
+                            <input 
+                                type="text" 
+                                name="last_name" 
+                                value="{{ user.last_name }}"
+                                class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark"
+                                placeholder="Enter your last name"
+                            />
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-intellilearn-white mb-2">Username</label>
+                            <input 
+                                type="text" 
+                                name="username" 
+                                value="{{ user.username }}"
+                                class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark"
+                                placeholder="Choose a username"
+                            />
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-intellilearn-white mb-2">Email Address</label>
+                            <input 
+                                type="email" 
+                                name="email" 
+                                value="{{ user.email }}"
+                                class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark"
+                                placeholder="Enter your email address"
+                            />
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Learning Preferences -->
+                <div>
+                    <h2 class="text-xl font-bold text-intellilearn-white mb-6">Learning Preferences</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Learning Level -->
+                        <div>
+                            <label class="block text-sm font-medium text-intellilearn-white mb-3">Current AI Knowledge Level</label>
+                            <div class="space-y-3">
+                                <label class="flex items-start space-x-3 p-3 bg-intellilearn-gray-dark rounded-lg hover:bg-intellilearn-gray-dark/70 transition-colors cursor-pointer">
+                                    <input type="radio" name="learning_level" value="beginner" 
+                                           {% if user.learning_level == 'beginner' %}checked{% endif %}
+                                           class="mt-1 text-intellilearn-red focus:ring-intellilearn-red">
+                                    <div class="flex-1">
+                                        <div class="flex items-center space-x-2 mb-1">
+                                            <span class="text-intellilearn-white font-medium">Beginner</span>
+                                            <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded-full">Recommended for new learners</span>
+                                        </div>
+                                        <p class="text-gray-400 text-sm">I'm new to AI and want to learn the fundamentals</p>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-start space-x-3 p-3 bg-intellilearn-gray-dark rounded-lg hover:bg-intellilearn-gray-dark/70 transition-colors cursor-pointer">
+                                    <input type="radio" name="learning_level" value="intermediate" 
+                                           {% if user.learning_level == 'intermediate' %}checked{% endif %}
+                                           class="mt-1 text-intellilearn-red focus:ring-intellilearn-red">
+                                    <div class="flex-1">
+                                        <div class="flex items-center space-x-2 mb-1">
+                                            <span class="text-intellilearn-white font-medium">Intermediate</span>
+                                            <span class="bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded-full">Some experience</span>
+                                        </div>
+                                        <p class="text-gray-400 text-sm">I have some AI knowledge and want to deepen my understanding</p>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-start space-x-3 p-3 bg-intellilearn-gray-dark rounded-lg hover:bg-intellilearn-gray-dark/70 transition-colors cursor-pointer">
+                                    <input type="radio" name="learning_level" value="advanced" 
+                                           {% if user.learning_level == 'advanced' %}checked{% endif %}
+                                           class="mt-1 text-intellilearn-red focus:ring-intellilearn-red">
+                                    <div class="flex-1">
+                                        <div class="flex items-center space-x-2 mb-1">
+                                            <span class="text-intellilearn-white font-medium">Advanced</span>
+                                            <span class="bg-red-900 text-red-300 text-xs px-2 py-1 rounded-full">Expert level</span>
+                                        </div>
+                                        <p class="text-gray-400 text-sm">I'm experienced with AI and want advanced topics</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Notification Preferences -->
+                        <div>
+                            <label class="block text-sm font-medium text-intellilearn-white mb-3">Notification Preferences</label>
+                            <div class="space-y-3">
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" name="email_notifications" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                                    <span class="text-intellilearn-white">Email notifications for course updates</span>
+                                </label>
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" name="quiz_reminders" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                                    <span class="text-intellilearn-white">Quiz and assignment reminders</span>
+                                </label>
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" name="achievement_notifications" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                                    <span class="text-intellilearn-white">Achievement and badge notifications</span>
+                                </label>
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" name="weekly_progress" class="text-intellilearn-red focus:ring-intellilearn-red">
+                                    <span class="text-intellilearn-white">Weekly progress reports</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Bio -->
+                        <div>
+                            <label class="block text-sm font-medium text-intellilearn-white mb-2">Bio (Optional)</label>
+                            <textarea 
+                                name="bio" 
+                                rows="4"
+                                class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark"
+                                placeholder="Tell us about yourself and your AI learning goals..."
+                            >{{ user.bio|default:'' }}</textarea>
+                            <p class="text-gray-400 text-xs mt-2">This will be visible to other learners in the community</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Privacy Settings -->
+                <div>
+                    <h2 class="text-xl font-bold text-intellilearn-white mb-6">Privacy Settings</h2>
+                    
+                    <div class="space-y-4">
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Show my progress on leaderboard</span>
+                                <p class="text-gray-400 text-sm">Allow others to see your ranking and achievements</p>
+                            </div>
+                            <input type="checkbox" name="show_on_leaderboard" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Make profile public</span>
+                                <p class="text-gray-400 text-sm">Allow other users to view your profile and activity</p>
+                            </div>
+                            <input type="checkbox" name="public_profile" class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div>
+                                <span class="text-intellilearn-white font-medium">Share learning data for AI improvements</span>
+                                <p class="text-gray-400 text-sm">Help improve our AI tutor with anonymized learning patterns</p>
+                            </div>
+                            <input type="checkbox" name="share_learning_data" checked class="text-intellilearn-red focus:ring-intellilearn-red">
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center justify-between pt-6 border-t border-intellilearn-gray-dark">
+                    <a href="{% url 'accounts:profile' %}" 
+                       class="bg-intellilearn-gray-dark text-intellilearn-white px-6 py-3 rounded-lg hover:bg-intellilearn-gray-dark/70 transition-colors">
+                        Cancel
+                    </a>
+                    <button type="submit" 
+                            class="bg-intellilearn-red text-white px-8 py-3 rounded-lg hover:bg-red-600 transition-colors font-medium">
+                        <i class="fas fa-save mr-2"></i>Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

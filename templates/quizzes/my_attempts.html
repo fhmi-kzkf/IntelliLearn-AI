@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+
+{% block title %}My Quiz Attempts - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-intellilearn-white">My Quiz Attempts</h1>
+            <p class="text-gray-400 mt-2">
+                Track your progress and review your quiz performance
+            </p>
+        </div>
+        
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-list text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-400 text-sm">Total Attempts</p>
+                        <p class="text-2xl font-bold text-intellilearn-white">15</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check-circle text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-400 text-sm">Completed</p>
+                        <p class="text-2xl font-bold text-intellilearn-white">12</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-chart-line text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-400 text-sm">Average Score</p>
+                        <p class="text-2xl font-bold text-intellilearn-white">82%</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-trophy text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-gray-400 text-sm">Best Score</p>
+                        <p class="text-2xl font-bold text-intellilearn-white">95%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filter and Sort -->
+        <div class="mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex items-center space-x-4">
+                    <select class="bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark">
+                        <option value="">All Subjects</option>
+                        <option value="machine-learning">Machine Learning</option>
+                        <option value="deep-learning">Deep Learning</option>
+                        <option value="nlp">Natural Language Processing</option>
+                    </select>
+                    
+                    <select class="bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark">
+                        <option value="">All Results</option>
+                        <option value="passed">Passed</option>
+                        <option value="failed">Failed</option>
+                        <option value="incomplete">Incomplete</option>
+                    </select>
+                </div>
+                
+                <div class="text-sm text-gray-400">
+                    Showing 8 of 15 attempts
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quiz Attempts List -->
+        <div class="space-y-4">
+            <!-- Recent Attempt 1 -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-intellilearn-white">Machine Learning Fundamentals</h3>
+                            <p class="text-gray-400">Attempt 2 • Completed 2 days ago</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold text-green-400">92%</div>
+                        <div class="text-sm text-gray-400">92/100 points</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-intellilearn-white">9/10</div>
+                        <div class="text-xs text-gray-400">Correct Answers</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-intellilearn-white">12:34</div>
+                        <div class="text-xs text-gray-400">Time Taken</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-green-400">PASS</div>
+                        <div class="text-xs text-gray-400">Result</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-yellow-400">+50</div>
+                        <div class="text-xs text-gray-400">Points Earned</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded-full">Personal Best</span>
+                        <span class="bg-blue-900 text-blue-300 text-xs px-2 py-1 rounded-full">Beginner</span>
+                    </div>
+                    <a href="{% url 'quizzes:results' quiz_id=1 attempt_id=2 %}" 
+                       class="text-intellilearn-red hover:text-red-400 transition-colors text-sm font-medium">
+                        View Details <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Attempt 2 -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-network-wired text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-intellilearn-white">Neural Networks Basics</h3>
+                            <p class="text-gray-400">Attempt 1 • Completed 5 days ago</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold text-green-400">88%</div>
+                        <div class="text-sm text-gray-400">88/100 points</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-intellilearn-white">7/8</div>
+                        <div class="text-xs text-gray-400">Correct Answers</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-intellilearn-white">8:45</div>
+                        <div class="text-xs text-gray-400">Time Taken</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-green-400">PASS</div>
+                        <div class="text-xs text-gray-400">Result</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-yellow-400">+40</div>
+                        <div class="text-xs text-gray-400">Points Earned</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded-full">Intermediate</span>
+                    </div>
+                    <a href="{% url 'quizzes:results' quiz_id=2 attempt_id=1 %}" 
+                       class="text-intellilearn-red hover:text-red-400 transition-colors text-sm font-medium">
+                        View Details <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Attempt 3 -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-comments text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-intellilearn-white">NLP Introduction</h3>
+                            <p class="text-gray-400">Attempt 3 • Completed 1 week ago</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold text-yellow-400">68%</div>
+                        <div class="text-sm text-gray-400">68/100 points</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-intellilearn-white">6/10</div>
+                        <div class="text-xs text-gray-400">Correct Answers</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-intellilearn-white">14:23</div>
+                        <div class="text-xs text-gray-400">Time Taken</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-red-400">FAIL</div>
+                        <div class="text-xs text-gray-400">Result</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-gray-400">+0</div>
+                        <div class="text-xs text-gray-400">Points Earned</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-red-900 text-red-300 text-xs px-2 py-1 rounded-full">Needs Improvement</span>
+                        <span class="bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded-full">Intermediate</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <a href="{% url 'quizzes:results' quiz_id=3 attempt_id=3 %}" 
+                           class="text-intellilearn-red hover:text-red-400 transition-colors text-sm font-medium">
+                            Review <i class="fas fa-eye ml-1"></i>
+                        </a>
+                        <a href="{% url 'quizzes:detail' quiz_id=3 %}" 
+                           class="bg-intellilearn-red text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
+                            Retake Quiz
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Incomplete Attempt -->
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-yellow-700 opacity-75">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-700 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-eye text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-intellilearn-white">Computer Vision Basics</h3>
+                            <p class="text-gray-400">Attempt 1 • Started 2 weeks ago</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold text-yellow-400">40%</div>
+                        <div class="text-sm text-gray-400">Incomplete</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-intellilearn-white">4/10</div>
+                        <div class="text-xs text-gray-400">Answered</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-intellilearn-white">8:12</div>
+                        <div class="text-xs text-gray-400">Time Elapsed</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-yellow-400">INCOMPLETE</div>
+                        <div class="text-xs text-gray-400">Status</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-gray-400">-</div>
+                        <div class="text-xs text-gray-400">Points</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded-full">In Progress</span>
+                        <span class="bg-red-900 text-red-300 text-xs px-2 py-1 rounded-full">Advanced</span>
+                    </div>
+                    <a href="{% url 'quizzes:take' quiz_id=4 attempt_id=1 %}" 
+                       class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition-colors text-sm">
+                        <i class="fas fa-play mr-2"></i>Continue Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Load More -->
+        <div class="text-center mt-8">
+            <button class="bg-intellilearn-gray-medium text-intellilearn-white px-6 py-3 rounded-lg hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
+                <i class="fas fa-plus mr-2"></i>Load More Attempts
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

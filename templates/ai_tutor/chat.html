@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Tutor Chat - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-intellilearn-white">AI Tutor</h1>
+                    <p class="text-gray-400 mt-2">
+                        Get instant help with AI concepts and personalized learning guidance
+                    </p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="startNewChat()" class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>New Chat
+                    </button>
+                    <button onclick="toggleChatHistory()" class="bg-intellilearn-gray-medium text-intellilearn-white px-4 py-2 rounded-lg hover:bg-intellilearn-gray-dark transition-colors">
+                        <i class="fas fa-history mr-2"></i>History
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Chat Interface -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Chat History Sidebar -->
+            <div id="chatHistory" class="lg:col-span-1 bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark hidden lg:block">
+                <h3 class="text-lg font-semibold text-intellilearn-white mb-4">Chat History</h3>
+                <div class="space-y-2">
+                    <div class="p-3 bg-intellilearn-gray-dark rounded-lg hover:bg-intellilearn-gray-dark/70 cursor-pointer transition-colors">
+                        <h4 class="text-intellilearn-white text-sm font-medium">Machine Learning Basics</h4>
+                        <p class="text-gray-400 text-xs">2 hours ago</p>
+                    </div>
+                    <div class="p-3 bg-intellilearn-gray-dark rounded-lg hover:bg-intellilearn-gray-dark/70 cursor-pointer transition-colors">
+                        <h4 class="text-intellilearn-white text-sm font-medium">Neural Networks Explained</h4>
+                        <p class="text-gray-400 text-xs">Yesterday</p>
+                    </div>
+                    <div class="p-3 bg-intellilearn-gray-dark rounded-lg hover:bg-intellilearn-gray-dark/70 cursor-pointer transition-colors">
+                        <h4 class="text-intellilearn-white text-sm font-medium">Python for AI</h4>
+                        <p class="text-gray-400 text-xs">3 days ago</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Chat Area -->
+            <div class="lg:col-span-3">
+                <div class="bg-intellilearn-gray-medium rounded-lg border border-intellilearn-gray-dark flex flex-col h-[500px] sm:h-[600px]">
+                    <!-- Chat Header -->
+                    <div class="flex items-center justify-between p-3 sm:p-4 border-b border-intellilearn-gray-dark">
+                        <div class="flex items-center space-x-3">
+                            <!-- Mobile history toggle -->
+                            <button onclick="toggleChatHistory()" class="lg:hidden text-gray-400 hover:text-intellilearn-white transition-colors">
+                                <i class="fas fa-history text-sm"></i>
+                            </button>
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-intellilearn-red to-red-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-robot text-white text-sm sm:text-base"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-intellilearn-white font-medium text-sm sm:text-base">IntelliLearn AI Tutor</h3>
+                                <p class="text-green-400 text-xs sm:text-sm flex items-center">
+                                    <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                                    Online
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="clearChat()" class="text-gray-400 hover:text-intellilearn-white transition-colors">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Messages -->
+                    <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4">
+                        <!-- Welcome Message -->
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-gradient-to-br from-intellilearn-red to-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                            <div class="bg-intellilearn-gray-dark rounded-lg rounded-tl-none p-3 max-w-xs lg:max-w-md">
+                                <p class="text-intellilearn-white text-sm">
+                                    Hello! I'm your AI tutor. I'm here to help you learn AI concepts, answer questions, and provide personalized guidance. What would you like to learn about today?
+                                </p>
+                                <div class="text-xs text-gray-400 mt-2">Just now</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Typing indicator (hidden by default) -->
+                        <div id="typingIndicator" class="flex items-start space-x-3 hidden">
+                            <div class="w-8 h-8 bg-gradient-to-br from-intellilearn-red to-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                            <div class="bg-intellilearn-gray-dark rounded-lg rounded-tl-none p-3">
+                                <div class="flex space-x-1">
+                                    <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                                    <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                                    <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Input -->
+                    <div class="border-t border-intellilearn-gray-dark p-3 sm:p-4">
+                        <div class="flex items-center space-x-2 sm:space-x-3">
+                            <div class="flex-1 relative">
+                                <input 
+                                    type="text" 
+                                    id="messageInput"
+                                    placeholder="Ask me anything about AI..." 
+                                    class="w-full bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-3 py-2 sm:px-4 sm:py-3 pr-10 sm:pr-12 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark text-sm sm:text-base"
+                                    onkeypress="handleKeyPress(event)"
+                                />
+                                <button 
+                                    onclick="sendMessage()" 
+                                    class="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 bg-intellilearn-red text-white p-1.5 sm:p-2 rounded hover:bg-red-600 transition-colors"
+                                >
+                                    <i class="fas fa-paper-plane text-xs sm:text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="mt-2 sm:mt-3 flex flex-wrap gap-1 sm:gap-2">
+                            <button onclick="sendQuickMessage('Explain neural networks')" class="bg-intellilearn-gray-dark text-gray-300 text-xs px-2 py-1 sm:px-3 sm:py-1 rounded hover:bg-intellilearn-gray-medium transition-colors">
+                                Neural networks
+                            </button>
+                            <button onclick="sendQuickMessage('What is deep learning?')" class="bg-intellilearn-gray-dark text-gray-300 text-xs px-2 py-1 sm:px-3 sm:py-1 rounded hover:bg-intellilearn-gray-medium transition-colors">
+                                Deep learning
+                            </button>
+                            <button onclick="sendQuickMessage('Python for AI')" class="bg-intellilearn-gray-dark text-gray-300 text-xs px-2 py-1 sm:px-3 sm:py-1 rounded hover:bg-intellilearn-gray-medium transition-colors">
+                                Python for AI
+                            </button>
+                            <button onclick="sendQuickMessage('Give me a quiz')" class="bg-intellilearn-gray-dark text-gray-300 text-xs px-2 py-1 sm:px-3 sm:py-1 rounded hover:bg-intellilearn-gray-medium transition-colors">
+                                Quiz me
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Suggested Topics -->
+        <div class="mt-8">
+            <h2 class="text-xl font-bold text-intellilearn-white mb-4">Popular Topics</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors cursor-pointer" onclick="sendQuickMessage('Explain machine learning algorithms')">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-intellilearn-white font-medium">ML Algorithms</h3>
+                            <p class="text-gray-400 text-sm">Learn different types</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors cursor-pointer" onclick="sendQuickMessage('What is computer vision?')">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-eye text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-intellilearn-white font-medium">Computer Vision</h3>
+                            <p class="text-gray-400 text-sm">Image recognition</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors cursor-pointer" onclick="sendQuickMessage('Explain natural language processing')">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-comments text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-intellilearn-white font-medium">NLP</h3>
+                            <p class="text-gray-400 text-sm">Language processing</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors cursor-pointer" onclick="sendQuickMessage('What are the AI ethics considerations?')">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-balance-scale text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-intellilearn-white font-medium">AI Ethics</h3>
+                            <p class="text-gray-400 text-sm">Responsible AI</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let chatMessages = [];
+    
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+    
+    function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+        
+        if (message) {
+            addUserMessage(message);
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Simulate AI response after delay
+            setTimeout(() => {
+                hideTypingIndicator();
+                addAIResponse(generateAIResponse(message));
+            }, 1500 + Math.random() * 1000);
+        }
+    }
+    
+    function sendQuickMessage(message) {
+        document.getElementById('messageInput').value = message;
+        sendMessage();
+    }
+    
+    function addUserMessage(message) {
+        const chatContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'flex items-start space-x-3 justify-end';
+        messageDiv.innerHTML = `
+            <div class="bg-intellilearn-red rounded-lg rounded-tr-none p-3 max-w-xs lg:max-w-md">
+                <p class="text-white text-sm">${message}</p>
+                <div class="text-xs text-red-200 mt-2">Just now</div>
+            </div>
+            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-white text-sm font-medium">{{ user.first_name.0|default:'U' }}</span>
+            </div>
+        `;
+        chatContainer.appendChild(messageDiv);
+        scrollToBottom();
+    }
+    
+    function addAIResponse(response) {
+        const chatContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'flex items-start space-x-3';
+        messageDiv.innerHTML = `
+            <div class="w-8 h-8 bg-gradient-to-br from-intellilearn-red to-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-robot text-white text-sm"></i>
+            </div>
+            <div class="bg-intellilearn-gray-dark rounded-lg rounded-tl-none p-3 max-w-xs lg:max-w-md">
+                <p class="text-intellilearn-white text-sm">${response}</p>
+                <div class="text-xs text-gray-400 mt-2">Just now</div>
+            </div>
+        `;
+        chatContainer.appendChild(messageDiv);
+        scrollToBottom();
+    }
+    
+    function generateAIResponse(userMessage) {
+        const responses = {
+            "machine learning": "Machine learning is a powerful AI technique that enables computers to learn patterns from data and make predictions without explicit programming.",
+            "neural network": "Neural networks are computing systems inspired by biological neural networks. They consist of interconnected nodes (neurons) that process information.",
+            "deep learning": "Deep learning is a subset of machine learning that uses neural networks with multiple layers to learn complex patterns in data.",
+            "python": "Python is an excellent programming language for AI due to its simplicity and powerful libraries like TensorFlow, PyTorch, and scikit-learn.",
+            "quiz": "Great! Here is a quick question: What is the main difference between supervised and unsupervised learning?",
+            "computer vision": "Computer vision enables computers to interpret and understand visual information from images and videos, like facial recognition and object detection.",
+            "nlp": "Natural Language Processing (NLP) helps computers understand, interpret, and generate human language in meaningful ways.",
+            "ethics": "AI ethics involves ensuring fairness, transparency, accountability, and responsible development of AI systems to benefit society."
+        };
+        
+        const lowerMessage = userMessage.toLowerCase();
+        for (const [key, response] of Object.entries(responses)) {
+            if (lowerMessage.includes(key)) {
+                return response;
+            }
+        }
+        
+        return "That's an interesting question! I'd be happy to help you learn more about that AI concept. Could you provide more specific details about what you'd like to know?";
+    }
+    
+    function showTypingIndicator() {
+        document.getElementById('typingIndicator').classList.remove('hidden');
+        scrollToBottom();
+    }
+    
+    function hideTypingIndicator() {
+        document.getElementById('typingIndicator').classList.add('hidden');
+    }
+    
+    function scrollToBottom() {
+        const chatContainer = document.getElementById('chatMessages');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    function startNewChat() {
+        const chatContainer = document.getElementById('chatMessages');
+        // Keep only the welcome message
+        const welcomeMessage = chatContainer.children[0];
+        chatContainer.innerHTML = '';
+        chatContainer.appendChild(welcomeMessage);
+    }
+    
+    function clearChat() {
+        if (confirm('Are you sure you want to clear this chat?')) {
+            startNewChat();
+        }
+    }
+    
+    function toggleChatHistory() {
+        const sidebar = document.getElementById('chatHistory');
+        sidebar.classList.toggle('hidden');
+    }
+    
+    // Auto-scroll to bottom on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        scrollToBottom();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-intellilearn-white">My Profile</h1>
+            <p class="text-gray-400 mt-2">
+                Manage your account information and learning preferences
+            </p>
+        </div>
+        
+        <!-- Profile Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- Profile Info -->
+            <div class="lg:col-span-2">
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-intellilearn-white">Personal Information</h2>
+                        <a href="{% url 'accounts:edit_profile' %}" 
+                           class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                            <i class="fas fa-edit mr-2"></i>Edit Profile
+                        </a>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">First Name</label>
+                            <div class="text-intellilearn-white text-lg">{{ user.first_name|default:"Not provided" }}</div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Last Name</label>
+                            <div class="text-intellilearn-white text-lg">{{ user.last_name|default:"Not provided" }}</div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Username</label>
+                            <div class="text-intellilearn-white text-lg">{{ user.username }}</div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
+                            <div class="text-intellilearn-white text-lg">{{ user.email }}</div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Member Since</label>
+                            <div class="text-intellilearn-white text-lg">{{ user.date_joined|date:"F d, Y" }}</div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Account Status</label>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-900 text-green-300">
+                                <i class="fas fa-check-circle mr-2"></i>Active
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Learning Preferences -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark mt-6">
+                    <h2 class="text-xl font-bold text-intellilearn-white mb-6">Learning Preferences</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Learning Level</label>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {% if user.learning_level == 'beginner' %}bg-green-900 text-green-300{% elif user.learning_level == 'intermediate' %}bg-yellow-900 text-yellow-300{% else %}bg-red-900 text-red-300{% endif %}">
+                                <i class="fas fa-star mr-2"></i>
+                                {{ user.get_learning_level_display }}
+                            </span>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Role</label>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-900 text-blue-300">
+                                <i class="fas fa-user mr-2"></i>
+                                {{ user.get_role_display }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Avatar & Stats -->
+            <div class="space-y-6">
+                <!-- Avatar -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark text-center">
+                    <div class="w-24 h-24 bg-intellilearn-red rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">{{ user.first_name.0|default:user.username.0|upper }}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-intellilearn-white">{{ user.first_name }} {{ user.last_name }}</h3>
+                    <p class="text-gray-400">@{{ user.username }}</p>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <h3 class="text-lg font-bold text-intellilearn-white mb-4">Quick Stats</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Total Points</span>
+                            <span class="text-intellilearn-white font-bold">{{ user.total_points|default:0 }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Current Streak</span>
+                            <span class="text-intellilearn-white font-bold">{{ user.current_streak|default:0 }} days</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Courses Enrolled</span>
+                            <span class="text-intellilearn-white font-bold">{{ user.enrollments.count|default:0 }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Badges Earned</span>
+                            <span class="text-intellilearn-white font-bold">{{ user.user_badges.count|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark mb-8">
+            <h2 class="text-xl font-bold text-intellilearn-white mb-6">Recent Activity</h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-center space-x-4 p-4 bg-intellilearn-gray-dark rounded-lg">
+                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-trophy text-white"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-intellilearn-white font-medium">Earned "Quick Learner" Badge</h4>
+                        <p class="text-gray-400 text-sm">3 days ago</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4 p-4 bg-intellilearn-gray-dark rounded-lg">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-white"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-intellilearn-white font-medium">Completed "Machine Learning Fundamentals" Quiz</h4>
+                        <p class="text-gray-400 text-sm">5 days ago • Score: 92%</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4 p-4 bg-intellilearn-gray-dark rounded-lg">
+                    <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-book text-white"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-intellilearn-white font-medium">Enrolled in "Neural Networks Deep Dive"</h4>
+                        <p class="text-gray-400 text-sm">1 week ago</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Account Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <a href="{% url 'accounts:edit_profile' %}" 
+               class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-edit text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-intellilearn-white font-medium">Edit Profile</h3>
+                        <p class="text-gray-400 text-sm">Update your information</p>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'accounts:change_password' %}" 
+               class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-lock text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-intellilearn-white font-medium">Change Password</h3>
+                        <p class="text-gray-400 text-sm">Update your password</p>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'accounts:settings' %}" 
+               class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-cog text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-intellilearn-white font-medium">Account Settings</h3>
+                        <p class="text-gray-400 text-sm">Privacy & preferences</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

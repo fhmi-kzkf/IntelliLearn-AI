@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Welcome Header -->
+        <div class="text-center mb-12">
+            <div class="w-20 h-20 bg-gradient-to-br from-intellilearn-red to-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-rocket text-white text-3xl"></i>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-intellilearn-white mb-4">
+                Welcome to IntelliLearn AI, {{ user.first_name }}! 🎉
+            </h1>
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+                You're all set to begin your AI learning journey. Let's get you familiar with the platform.
+            </p>
+        </div>
+        
+        <!-- Progress Steps -->
+        <div class="mb-12">
+            <div class="flex items-center justify-center space-x-4 mb-8">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-white text-sm"></i>
+                    </div>
+                    <span class="text-green-400 font-medium">Account Created</span>
+                </div>
+                <div class="w-8 h-1 bg-intellilearn-red"></div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-intellilearn-red rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-bold">2</span>
+                    </div>
+                    <span class="text-intellilearn-white font-medium">Platform Tour</span>
+                </div>
+                <div class="w-8 h-1 bg-gray-600"></div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                        <span class="text-gray-400 text-sm font-bold">3</span>
+                    </div>
+                    <span class="text-gray-400">Start Learning</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Platform Features -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <!-- Feature 1: AI Tutor -->
+            <div class="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-lg p-6 text-center">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-robot text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-blue-300 mb-3">AI Tutor</h3>
+                <p class="text-gray-300 mb-4">
+                    Get instant help and explanations from our AI tutor. Ask questions anytime, anywhere.
+                </p>
+                <a href="{% url 'ai_tutor:chat' %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                    Try AI Tutor
+                </a>
+            </div>
+            
+            <!-- Feature 2: Interactive Courses -->
+            <div class="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-lg p-6 text-center">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-book text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-green-300 mb-3">Micro-Learning</h3>
+                <p class="text-gray-300 mb-4">
+                    Learn AI concepts in bite-sized lessons designed for busy schedules.
+                </p>
+                <a href="{% url 'courses:list' %}" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                    Browse Courses
+                </a>
+            </div>
+            
+            <!-- Feature 3: Gamification -->
+            <div class="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-lg p-6 text-center">
+                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-trophy text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-purple-300 mb-3">Earn Rewards</h3>
+                <p class="text-gray-300 mb-4">
+                    Earn points, unlock badges, and climb the leaderboard as you learn.
+                </p>
+                <a href="{% url 'gamification:my_badges' %}" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
+                    View Badges
+                </a>
+            </div>
+        </div>
+        
+        <!-- Your Learning Level -->
+        <div class="bg-intellilearn-gray-medium rounded-lg p-6 mb-8 border border-intellilearn-gray-dark">
+            <h2 class="text-2xl font-bold text-intellilearn-white mb-4">Your Learning Profile</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-intellilearn-white mb-2">Current Level</h3>
+                    <div class="flex items-center space-x-3">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {% if user.learning_level == 'beginner' %}bg-green-900 text-green-300{% elif user.learning_level == 'intermediate' %}bg-yellow-900 text-yellow-300{% else %}bg-red-900 text-red-300{% endif %}">
+                            <i class="fas fa-star mr-2"></i>
+                            {{ user.get_learning_level_display }}
+                        </span>
+                    </div>
+                    <p class="text-gray-400 text-sm mt-2">
+                        {% if user.learning_level == 'beginner' %}
+                            Perfect! We'll start with the fundamentals and build up your knowledge step by step.
+                        {% elif user.learning_level == 'intermediate' %}
+                            Great! You can skip the basics and dive into more advanced concepts.
+                        {% else %}
+                            Excellent! You'll have access to our most challenging and cutting-edge content.
+                        {% endif %}
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-intellilearn-white mb-2">Recommended Next Steps</h3>
+                    <ul class="space-y-2">
+                        {% if user.learning_level == 'beginner' %}
+                            <li class="flex items-center space-x-2 text-gray-300">
+                                <i class="fas fa-chevron-right text-intellilearn-red text-xs"></i>
+                                <span class="text-sm">Start with "Introduction to AI"</span>
+                            </li>
+                            <li class="flex items-center space-x-2 text-gray-300">
+                                <i class="fas fa-chevron-right text-intellilearn-red text-xs"></i>
+                                <span class="text-sm">Take the AI Basics Quiz</span>
+                            </li>
+                        {% elif user.learning_level == 'intermediate' %}
+                            <li class="flex items-center space-x-2 text-gray-300">
+                                <i class="fas fa-chevron-right text-intellilearn-red text-xs"></i>
+                                <span class="text-sm">Explore "Neural Networks Deep Dive"</span>
+                            </li>
+                            <li class="flex items-center space-x-2 text-gray-300">
+                                <i class="fas fa-chevron-right text-intellilearn-red text-xs"></i>
+                                <span class="text-sm">Practice with coding exercises</span>
+                            </li>
+                        {% else %}
+                            <li class="flex items-center space-x-2 text-gray-300">
+                                <i class="fas fa-chevron-right text-intellilearn-red text-xs"></i>
+                                <span class="text-sm">Join "Advanced AI Research"</span>
+                            </li>
+                            <li class="flex items-center space-x-2 text-gray-300">
+                                <i class="fas fa-chevron-right text-intellilearn-red text-xs"></i>
+                                <span class="text-sm">Contribute to AI projects</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Start Actions -->
+        <div class="text-center">
+            <h2 class="text-2xl font-bold text-intellilearn-white mb-6">Ready to Start Learning?</h2>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="{% url 'dashboard' %}" class="bg-intellilearn-red text-white px-8 py-3 rounded-lg hover:bg-red-600 transition-colors font-medium text-lg">
+                    Go to Dashboard
+                </a>
+                <a href="{% url 'courses:list' %}" class="border border-intellilearn-red text-intellilearn-red px-8 py-3 rounded-lg hover:bg-intellilearn-red hover:text-white transition-colors font-medium text-lg">
+                    Browse Courses
+                </a>
+                <a href="{% url 'ai_tutor:chat' %}" class="bg-intellilearn-gray-medium text-intellilearn-white px-8 py-3 rounded-lg hover:bg-intellilearn-gray-dark transition-colors font-medium text-lg">
+                    Chat with AI Tutor
+                </a>
+            </div>
+        </div>
+        
+        <!-- Tips for Success -->
+        <div class="mt-12 bg-gradient-to-r from-intellilearn-red/10 to-purple-600/10 border border-intellilearn-red/20 rounded-lg p-6">
+            <h3 class="text-lg font-bold text-intellilearn-white mb-4 flex items-center">
+                <i class="fas fa-lightbulb text-yellow-400 mr-2"></i>
+                Tips for Success
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-calendar-check text-intellilearn-red mt-1"></i>
+                    <div>
+                        <h4 class="text-intellilearn-white font-medium">Set a Learning Schedule</h4>
+                        <p class="text-gray-400 text-sm">Aim for 15-30 minutes daily for best results</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-comments text-intellilearn-red mt-1"></i>
+                    <div>
+                        <h4 class="text-intellilearn-white font-medium">Ask Questions</h4>
+                        <p class="text-gray-400 text-sm">Use the AI tutor whenever you're stuck</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-hands-helping text-intellilearn-red mt-1"></i>
+                    <div>
+                        <h4 class="text-intellilearn-white font-medium">Practice Regularly</h4>
+                        <p class="text-gray-400 text-sm">Take quizzes to reinforce your learning</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-users text-intellilearn-red mt-1"></i>
+                    <div>
+                        <h4 class="text-intellilearn-white font-medium">Join the Community</h4>
+                        <p class="text-gray-400 text-sm">Connect with other learners and mentors</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

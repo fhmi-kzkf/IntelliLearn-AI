@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+
+{% block title %}Badges & Achievements - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-intellilearn-white mb-4">Badges & Achievements</h1>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                Earn badges by completing courses, taking quizzes, and reaching learning milestones. 
+                Show off your AI learning achievements!
+            </p>
+        </div>
+
+        <!-- User Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 text-center border border-intellilearn-gray-dark">
+                <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-trophy text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-intellilearn-white">{{ user.user_badges.count|default:0 }}</h3>
+                <p class="text-gray-400">Badges Earned</p>
+            </div>
+            
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 text-center border border-intellilearn-gray-dark">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-star text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-intellilearn-white">{{ user.total_points|default:0 }}</h3>
+                <p class="text-gray-400">Total Points</p>
+            </div>
+            
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 text-center border border-intellilearn-gray-dark">
+                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-medal text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-intellilearn-white">#{15}</h3>
+                <p class="text-gray-400">Global Rank</p>
+            </div>
+            
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 text-center border border-intellilearn-gray-dark">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-percentage text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-intellilearn-white">75%</h3>
+                <p class="text-gray-400">Completion Rate</p>
+            </div>
+        </div>
+
+        <!-- Badge Categories -->
+        <div class="mb-8">
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="filterBadges('all')" class="badge-filter active bg-intellilearn-red text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                    All Badges
+                </button>
+                <button onclick="filterBadges('earned')" class="badge-filter bg-intellilearn-gray-medium text-intellilearn-white px-6 py-2 rounded-lg font-medium hover:bg-intellilearn-gray-dark transition-colors">
+                    Earned (3)
+                </button>
+                <button onclick="filterBadges('available')" class="badge-filter bg-intellilearn-gray-medium text-intellilearn-white px-6 py-2 rounded-lg font-medium hover:bg-intellilearn-gray-dark transition-colors">
+                    Available (12)
+                </button>
+                <button onclick="filterBadges('completion')" class="badge-filter bg-intellilearn-gray-medium text-intellilearn-white px-6 py-2 rounded-lg font-medium hover:bg-intellilearn-gray-dark transition-colors">
+                    Course Completion
+                </button>
+                <button onclick="filterBadges('quiz')" class="badge-filter bg-intellilearn-gray-medium text-intellilearn-white px-6 py-2 rounded-lg font-medium hover:bg-intellilearn-gray-dark transition-colors">
+                    Quiz Master
+                </button>
+                <button onclick="filterBadges('streak')" class="badge-filter bg-intellilearn-gray-medium text-intellilearn-white px-6 py-2 rounded-lg font-medium hover:bg-intellilearn-gray-dark transition-colors">
+                    Learning Streak
+                </button>
+            </div>
+        </div>
+
+        <!-- Badges Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Earned Badge 1 -->
+            <div class="badge-card earned completion bg-intellilearn-gray-medium rounded-lg p-6 border-2 border-green-500 text-center relative overflow-hidden">
+                <div class="absolute top-2 right-2">
+                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                </div>
+                
+                <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+                    <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                    <div class="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                        <i class="fas fa-star text-yellow-800 text-xs"></i>
+                    </div>
+                </div>
+                
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">First Steps</h3>
+                <div class="flex justify-center mb-2">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-900 text-green-300">
+                        Common
+                    </span>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Complete your first AI course</p>
+                <div class="text-green-400 text-sm font-medium">
+                    <i class="fas fa-calendar mr-1"></i>Earned 3 days ago
+                </div>
+            </div>
+
+            <!-- Earned Badge 2 -->
+            <div class="badge-card earned quiz bg-intellilearn-gray-medium rounded-lg p-6 border-2 border-green-500 text-center relative overflow-hidden">
+                <div class="absolute top-2 right-2">
+                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                </div>
+                
+                <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+                    <i class="fas fa-brain text-white text-2xl"></i>
+                    <div class="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                        <i class="fas fa-star text-yellow-800 text-xs"></i>
+                    </div>
+                </div>
+                
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">Quiz Master</h3>
+                <div class="flex justify-center mb-2">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-900 text-blue-300">
+                        Uncommon
+                    </span>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Score 90%+ on 5 quizzes</p>
+                <div class="text-green-400 text-sm font-medium">
+                    <i class="fas fa-calendar mr-1"></i>Earned 1 week ago
+                </div>
+            </div>
+
+            <!-- Earned Badge 3 -->
+            <div class="badge-card earned streak bg-intellilearn-gray-medium rounded-lg p-6 border-2 border-green-500 text-center relative overflow-hidden">
+                <div class="absolute top-2 right-2">
+                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                </div>
+                
+                <div class="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+                    <i class="fas fa-fire text-white text-2xl"></i>
+                    <div class="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                        <i class="fas fa-star text-yellow-800 text-xs"></i>
+                    </div>
+                </div>
+                
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">On Fire!</h3>
+                <div class="flex justify-center mb-2">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-900 text-orange-300">
+                        Rare
+                    </span>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Maintain a 7-day learning streak</p>
+                <div class="text-green-400 text-sm font-medium">
+                    <i class="fas fa-calendar mr-1"></i>Earned 2 days ago
+                </div>
+            </div>
+
+            <!-- Available Badge 1 -->
+            <div class="badge-card available completion bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark text-center opacity-75 hover:opacity-100 transition-opacity">
+                <div class="w-20 h-20 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-robot text-white text-2xl"></i>
+                </div>
+                
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">AI Explorer</h3>
+                <div class="flex justify-center mb-2">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-700 text-gray-300">
+                        Common
+                    </span>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Complete 3 different AI courses</p>
+                <div class="bg-intellilearn-gray-dark rounded-full h-2 mb-2">
+                    <div class="bg-intellilearn-red h-2 rounded-full" style="width: 33%"></div>
+                </div>
+                <div class="text-gray-400 text-sm">
+                    Progress: 1/3 courses
+                </div>
+            </div>
+
+            <!-- Available Badge 2 -->
+            <div class="badge-card available quiz bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark text-center opacity-75 hover:opacity-100 transition-opacity">
+                <div class="w-20 h-20 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lightning-bolt text-white text-2xl"></i>
+                </div>
+                
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">Speed Demon</h3>
+                <div class="flex justify-center mb-2">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-900 text-purple-300">
+                        Epic
+                    </span>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Complete a quiz in under 5 minutes</p>
+                <div class="bg-intellilearn-gray-dark rounded-full h-2 mb-2">
+                    <div class="bg-intellilearn-red h-2 rounded-full" style="width: 0%"></div>
+                </div>
+                <div class="text-gray-400 text-sm">
+                    Best time: 12:34
+                </div>
+            </div>
+
+            <!-- Available Badge 3 -->
+            <div class="badge-card available streak bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark text-center opacity-75 hover:opacity-100 transition-opacity">
+                <div class="w-20 h-20 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-calendar-alt text-white text-2xl"></i>
+                </div>
+                
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">Dedication</h3>
+                <div class="flex justify-center mb-2">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-900 text-yellow-300">
+                        Legendary
+                    </span>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Maintain a 30-day learning streak</p>
+                <div class="bg-intellilearn-gray-dark rounded-full h-2 mb-2">
+                    <div class="bg-intellilearn-red h-2 rounded-full" style="width: 23%"></div>
+                </div>
+                <div class="text-gray-400 text-sm">
+                    Progress: 7/30 days
+                </div>
+            </div>
+
+            <!-- Available Badge 4 -->
+            <div class="badge-card available completion bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark text-center opacity-75 hover:opacity-100 transition-opacity">
+                <div class="w-20 h-20 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-crown text-white text-2xl"></i>
+                </div>
+                
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">AI Master</h3>
+                <div class="flex justify-center mb-2">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-900 text-yellow-300">
+                        Legendary
+                    </span>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Complete all advanced AI courses</p>
+                <div class="bg-intellilearn-gray-dark rounded-full h-2 mb-2">
+                    <div class="bg-intellilearn-red h-2 rounded-full" style="width: 0%"></div>
+                </div>
+                <div class="text-gray-400 text-sm">
+                    Progress: 0/8 courses
+                </div>
+            </div>
+
+            <!-- Available Badge 5 -->
+            <div class="badge-card available quiz bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark text-center opacity-75 hover:opacity-100 transition-opacity">
+                <div class="w-20 h-20 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-bullseye text-white text-2xl"></i>
+                </div>
+                
+                <h3 class="text-lg font-bold text-intellilearn-white mb-2">Perfect Score</h3>
+                <div class="flex justify-center mb-2">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-900 text-purple-300">
+                        Epic
+                    </span>
+                </div>
+                <p class="text-gray-300 text-sm mb-4">Score 100% on any quiz</p>
+                <div class="bg-intellilearn-gray-dark rounded-full h-2 mb-2">
+                    <div class="bg-intellilearn-red h-2 rounded-full" style="width: 85%"></div>
+                </div>
+                <div class="text-gray-400 text-sm">
+                    Best score: 85%
+                </div>
+            </div>
+        </div>
+
+        <!-- Badge Details Modal -->
+        <div id="badge-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-intellilearn-gray-medium rounded-lg p-8 max-w-md mx-4 border border-intellilearn-gray-dark">
+                <div class="text-center">
+                    <div class="w-24 h-24 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-brain text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-intellilearn-white mb-2">Quiz Master</h3>
+                    <div class="flex justify-center mb-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-900 text-blue-300">
+                            Uncommon Badge
+                        </span>
+                    </div>
+                    <p class="text-gray-300 mb-6">
+                        Awarded for scoring 90% or higher on 5 different quizzes. 
+                        This badge demonstrates your mastery of AI concepts and consistent high performance.
+                    </p>
+                    <div class="space-y-2 text-sm text-gray-400 mb-6">
+                        <div class="flex justify-between">
+                            <span>Points Awarded:</span>
+                            <span class="text-yellow-400">100 points</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Earned By:</span>
+                            <span>234 users (12%)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Date Earned:</span>
+                            <span>March 15, 2024</span>
+                        </div>
+                    </div>
+                    <button onclick="closeBadgeModal()" class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function filterBadges(category) {
+        // Update active filter button
+        document.querySelectorAll('.badge-filter').forEach(btn => {
+            btn.classList.remove('active', 'bg-intellilearn-red');
+            btn.classList.add('bg-intellilearn-gray-medium');
+        });
+        event.target.classList.add('active', 'bg-intellilearn-red');
+        event.target.classList.remove('bg-intellilearn-gray-medium');
+        
+        // Show/hide badges based on category
+        const badges = document.querySelectorAll('.badge-card');
+        badges.forEach(badge => {
+            if (category === 'all') {
+                badge.style.display = 'block';
+            } else if (category === 'earned') {
+                badge.style.display = badge.classList.contains('earned') ? 'block' : 'none';
+            } else if (category === 'available') {
+                badge.style.display = badge.classList.contains('available') ? 'block' : 'none';
+            } else {
+                badge.style.display = badge.classList.contains(category) ? 'block' : 'none';
+            }
+        });
+    }
+    
+    function showBadgeDetails(badgeElement) {
+        document.getElementById('badge-modal').classList.remove('hidden');
+    }
+    
+    function closeBadgeModal() {
+        document.getElementById('badge-modal').classList.add('hidden');
+    }
+    
+    // Add click handlers to earned badges
+    document.querySelectorAll('.badge-card.earned').forEach(badge => {
+        badge.addEventListener('click', () => showBadgeDetails(badge));
+        badge.style.cursor = 'pointer';
+    });
+</script>
+{% endblock %}
