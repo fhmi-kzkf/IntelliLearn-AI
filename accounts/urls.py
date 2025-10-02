@@ -1,6 +1,8 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth.views import LogoutView
+from rest_framework.routers import DefaultRouter
 from . import views
+from . import api_views
 
 app_name = 'accounts'
 
@@ -24,4 +26,12 @@ urlpatterns = [
     # Account verification
     path('verify-email/<uidb64>/<token>/', views.VerifyEmailView.as_view(), name='verify_email'),
     path('resend-verification/', views.ResendVerificationView.as_view(), name='resend_verification'),
+    
+    # API endpoints
+    path('api/user/', api_views.UserDetailView.as_view(), name='api_user_detail'),
+    path('api/user/update/', api_views.UserProfileUpdateView.as_view(), name='api_user_update'),
+    path('api/login/', api_views.user_login, name='api_login'),
+    path('api/logout/', api_views.user_logout, name='api_logout'),
+    path('api/register/', api_views.user_register, name='api_register'),
+    path('api/dashboard/', api_views.user_dashboard_data, name='api_dashboard'),
 ]

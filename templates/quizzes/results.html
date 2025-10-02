@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Quiz Results - IntelliLearn AI{% endblock %}
+{% block title %}{{ quiz.title }} Results - IntelliLearn AI{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -23,6 +23,11 @@
         40% { transform: translateY(-10px); }
         60% { transform: translateY(-5px); }
     }
+    
+    .progress-bar {
+        transition: width 1s ease-in-out;
+        width: 0%;
+    }
 </style>
 {% endblock %}
 
@@ -32,12 +37,20 @@
         <!-- Results Header -->
         <div class="text-center mb-8">
             <div class="score-animation inline-block">
-                <div class="w-32 h-32 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span class="text-4xl font-bold text-white">85%</span>
+                <div class="w-32 h-32 {% if attempt.percentage >= 80 %}bg-gradient-to-br from-green-400 to-green-600{% elif attempt.percentage >= 70 %}bg-gradient-to-br from-yellow-400 to-yellow-600{% else %}bg-gradient-to-br from-red-400 to-red-600{% endif %} rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-4xl font-bold text-white">{{ attempt.percentage|floatformat:0 }}%</span>
                 </div>
             </div>
-            <h1 class="text-3xl font-bold text-intellilearn-white mb-2">Great Job!</h1>
-            <p class="text-xl text-gray-300">You scored 85% on Introduction to Machine Learning</p>
+            <h1 class="text-3xl font-bold text-intellilearn-white mb-2">
+                {% if attempt.percentage >= 80 %}
+                    Excellent Work!
+                {% elif attempt.percentage >= 70 %}
+                    Good Job!
+                {% else %}
+                    Keep Practicing!
+                {% endif %}
+            </h1>
+            <p class="text-xl text-gray-300">You scored {{ attempt.percentage|floatformat:1 }}% on {{ quiz.title }}</p>
         </div>
 
         <!-- Score Breakdown -->
@@ -48,8 +61,8 @@
                     <i class="fas fa-trophy text-white text-xl"></i>
                 </div>
                 <h3 class="text-lg font-semibold text-intellilearn-white">Total Score</h3>
-                <p class="text-2xl font-bold text-green-400">17/20</p>
-                <p class="text-gray-400 text-sm">85% Correct</p>
+                <p class="text-2xl font-bold text-green-400">{{ attempt.score }}/{{ quiz.get_total_points }}</p>
+                <p class="text-gray-400 text-sm">{{ attempt.percentage|floatformat:1 }}% Correct</p>
             </div>
 
             <!-- Time Taken -->
@@ -58,8 +71,20 @@
                     <i class="fas fa-clock text-white text-xl"></i>
                 </div>
                 <h3 class="text-lg font-semibold text-intellilearn-white">Time Taken</h3>
-                <p class="text-2xl font-bold text-blue-400">12:34</p>
-                <p class="text-gray-400 text-sm">of 15:00 allowed</p>
+                <p class="text-2xl font-bold text-blue-400">
+                    {% if attempt.time_taken %}
+                        {{ attempt.time_taken|date:"i:s" }}
+                    {% else %}
+                        00:00
+                    {% endif %}
+                </p>
+                <p class="text-gray-400 text-sm">
+                    {% if quiz.time_limit > 0 %}
+                        of {{ quiz.time_limit }}:00 allowed
+                    {% else %}
+                        No time limit
+                    {% endif %}
+                </p>
             </div>
 
             <!-- Points Earned -->
@@ -68,8 +93,14 @@
                     <i class="fas fa-coins text-white text-xl"></i>
                 </div>
                 <h3 class="text-lg font-semibold text-intellilearn-white">Points Earned</h3>
-                <p class="text-2xl font-bold text-yellow-400">170</p>
-                <p class="text-gray-400 text-sm">+50 bonus points</p>
+                <p class="text-2xl font-bold text-yellow-400">{{ attempt.score }}</p>
+                <p class="text-gray-400 text-sm">
+                    {% if quiz.bonus_points > 0 and attempt.percentage == 100 %}
+                        +{{ quiz.bonus_points }} bonus points
+                    {% else %}
+                        Base points
+                    {% endif %}
+                </p>
             </div>
 
             <!-- Rank -->
@@ -78,21 +109,8 @@
                     <i class="fas fa-medal text-white text-xl"></i>
                 </div>
                 <h3 class="text-lg font-semibold text-intellilearn-white">Your Rank</h3>
-                <p class="text-2xl font-bold text-purple-400">#15</p>
-                <p class="text-gray-400 text-sm">out of 234 attempts</p>
-            </div>
-        </div>
-
-        <!-- Badge Earned -->
-        <div class="bg-gradient-to-r from-yellow-600/20 to-yellow-500/20 rounded-lg p-6 mb-8 border border-yellow-500/30">
-            <div class="flex items-center space-x-4">
-                <div class="badge-earned w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center">
-                    <i class="fas fa-star text-white text-2xl"></i>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-yellow-300">Badge Earned!</h3>
-                    <p class="text-yellow-100">ML Fundamentals - Complete your first ML quiz with 80%+ score</p>
-                </div>
+                <p class="text-2xl font-bold text-purple-400">#{{ user_rank }}</p>
+                <p class="text-gray-400 text-sm">out of {{ total_attempts }} attempts</p>
             </div>
         </div>
 
@@ -108,24 +126,19 @@
                         <i class="fas fa-check-circle mr-2"></i>Strengths
                     </h4>
                     <div class="space-y-3">
+                        {% for strength in performance_analysis.strengths %}
                         <div class="flex items-center justify-between">
-                            <span class="text-gray-300">Supervised Learning</span>
+                            <span class="text-gray-300">{{ strength.topic }}</span>
                             <div class="flex items-center space-x-2">
                                 <div class="w-24 bg-intellilearn-gray-dark rounded-full h-2">
-                                    <div class="bg-green-500 h-2 rounded-full" style="width: 90%"></div>
+                                    <div class="bg-green-500 h-2 rounded-full progress-bar" data-width="{{ strength.score }}"></div>
                                 </div>
-                                <span class="text-green-400 text-sm font-medium">90%</span>
+                                <span class="text-green-400 text-sm font-medium">{{ strength.score }}%</span>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-300">Algorithm Selection</span>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-24 bg-intellilearn-gray-dark rounded-full h-2">
-                                    <div class="bg-green-500 h-2 rounded-full" style="width: 85%"></div>
-                                </div>
-                                <span class="text-green-400 text-sm font-medium">85%</span>
-                            </div>
-                        </div>
+                        {% empty %}
+                        <p class="text-gray-400">No strengths identified yet.</p>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -135,24 +148,19 @@
                         <i class="fas fa-exclamation-triangle mr-2"></i>Areas for Improvement
                     </h4>
                     <div class="space-y-3">
+                        {% for weakness in performance_analysis.weaknesses %}
                         <div class="flex items-center justify-between">
-                            <span class="text-gray-300">Feature Engineering</span>
+                            <span class="text-gray-300">{{ weakness.topic }}</span>
                             <div class="flex items-center space-x-2">
                                 <div class="w-24 bg-intellilearn-gray-dark rounded-full h-2">
-                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 60%"></div>
+                                    <div class="{% if weakness.score >= 60 %}bg-yellow-500{% else %}bg-red-500{% endif %} h-2 rounded-full progress-bar" data-width="{{ weakness.score }}"></div>
                                 </div>
-                                <span class="text-yellow-400 text-sm font-medium">60%</span>
+                                <span class="{% if weakness.score >= 60 %}text-yellow-400{% else %}text-red-400{% endif %} text-sm font-medium">{{ weakness.score }}%</span>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-300">Model Evaluation</span>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-24 bg-intellilearn-gray-dark rounded-full h-2">
-                                    <div class="bg-red-500 h-2 rounded-full" style="width: 45%"></div>
-                                </div>
-                                <span class="text-red-400 text-sm font-medium">45%</span>
-                            </div>
-                        </div>
+                        {% empty %}
+                        <p class="text-gray-400">No weaknesses identified.</p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -167,32 +175,29 @@
                     <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
                         <h4 class="text-blue-300 font-medium mb-2">Recommended Next Steps</h4>
                         <ul class="text-blue-100 text-sm space-y-1">
-                            <li>• Review feature engineering techniques</li>
-                            <li>• Practice cross-validation methods</li>
-                            <li>• Study precision, recall, and F1-score</li>
+                            {% for weakness in performance_analysis.weaknesses %}
+                            <li>• Review {{ weakness.topic }} concepts</li>
+                            {% endfor %}
+                            <li>• Practice more questions in weak areas</li>
                         </ul>
                     </div>
                     
+                    {% if quiz.course %}
                     <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-4">
                         <h4 class="text-green-300 font-medium mb-2">Suggested Courses</h4>
                         <div class="space-y-2">
-                            <a href="#" class="block text-green-100 text-sm hover:text-green-200 transition-colors">
-                                → Advanced Feature Engineering
-                            </a>
-                            <a href="#" class="block text-green-100 text-sm hover:text-green-200 transition-colors">
-                                → Model Evaluation Techniques
+                            <a href="{% url 'courses:detail' slug=quiz.course.slug %}" class="block text-green-100 text-sm hover:text-green-200 transition-colors">
+                                → {{ quiz.course.title }}
                             </a>
                         </div>
                     </div>
+                    {% endif %}
                     
                     <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
                         <h4 class="text-purple-300 font-medium mb-2">Practice Quizzes</h4>
                         <div class="space-y-2">
-                            <a href="#" class="block text-purple-100 text-sm hover:text-purple-200 transition-colors">
-                                → Feature Selection Quiz
-                            </a>
-                            <a href="#" class="block text-purple-100 text-sm hover:text-purple-200 transition-colors">
-                                → Evaluation Metrics Challenge
+                            <a href="{% url 'quizzes:list' %}" class="block text-purple-100 text-sm hover:text-purple-200 transition-colors">
+                                → Browse More Quizzes
                             </a>
                         </div>
                     </div>
@@ -204,121 +209,168 @@
         <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark mb-8">
             <h3 class="text-xl font-bold text-intellilearn-white mb-6">Question Review</h3>
             
-            <!-- Question 1 -->
+            {% for answer in answers %}
+            <!-- Question {{ forloop.counter }} -->
             <div class="border border-intellilearn-gray-dark rounded-lg p-6 mb-4">
                 <div class="flex items-start space-x-4">
-                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-check text-white text-sm"></i>
+                    <div class="w-8 h-8 {% if answer.is_correct %}bg-green-500{% else %}bg-red-500{% endif %} rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas {% if answer.is_correct %}fa-check{% else %}fa-times{% endif %} text-white text-sm"></i>
                     </div>
                     <div class="flex-1">
                         <div class="flex items-center space-x-3 mb-2">
-                            <span class="text-green-400 font-medium">Question 1</span>
-                            <span class="text-gray-400 text-sm">Correct • +2 points</span>
+                            <span class="{% if answer.is_correct %}text-green-400{% else %}text-red-400{% endif %} font-medium">Question {{ forloop.counter }}</span>
+                            <span class="text-gray-400 text-sm">
+                                {% if answer.is_correct %}
+                                    Correct • +{{ answer.points_earned }} points
+                                {% else %}
+                                    Incorrect • 0 points
+                                {% endif %}
+                            </span>
                         </div>
                         <h4 class="text-intellilearn-white font-medium mb-2">
-                            Which algorithm is best for classification with large datasets?
+                            {{ answer.question.text }}
                         </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                            <div>
-                                <p class="text-gray-400 mb-1">Your Answer:</p>
-                                <p class="text-green-400">✓ Support Vector Machine (SVM)</p>
-                            </div>
-                            <div>
-                                <p class="text-gray-400 mb-1">Explanation:</p>
-                                <p class="text-gray-300">SVMs are particularly effective for high-dimensional datasets and can handle large feature spaces efficiently.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Question 2 (Incorrect) -->
-            <div class="border border-intellilearn-gray-dark rounded-lg p-6 mb-4">
-                <div class="flex items-start space-x-4">
-                    <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-times text-white text-sm"></i>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-3 mb-2">
-                            <span class="text-red-400 font-medium">Question 2</span>
-                            <span class="text-gray-400 text-sm">Incorrect • 0 points</span>
-                        </div>
-                        <h4 class="text-intellilearn-white font-medium mb-2">
-                            What is the purpose of cross-validation?
-                        </h4>
+                        
+                        {% if answer.question.question_type == 'multiple_choice' %}
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                             <div>
                                 <p class="text-gray-400 mb-1">Your Answer:</p>
-                                <p class="text-red-400">✗ To increase training speed</p>
+                                <p class="{% if answer.is_correct %}text-green-400{% else %}text-red-400{% endif %}">
+                                    {% if answer.selected_choice %}
+                                        {% if answer.is_correct %}
+                                            ✓ 
+                                        {% else %}
+                                            ✗ 
+                                        {% endif %}
+                                        {{ answer.selected_choice.text }}
+                                    {% else %}
+                                        No answer provided
+                                    {% endif %}
+                                </p>
                             </div>
+                            {% if not answer.is_correct %}
                             <div>
                                 <p class="text-gray-400 mb-1">Correct Answer:</p>
-                                <p class="text-green-400">✓ To assess model performance</p>
+                                <p class="text-green-400">
+                                    {% for choice in answer.question.choices.all %}
+                                        {% if choice.is_correct %}
+                                            ✓ {{ choice.text }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
                             </div>
+                            {% endif %}
                             <div>
-                                <p class="text-gray-400 mb-1">AI Explanation:</p>
-                                <p class="text-gray-300">Cross-validation helps evaluate how well a model generalizes to unseen data by testing it on multiple data splits.</p>
+                                <p class="text-gray-400 mb-1">Explanation:</p>
+                                <p class="text-gray-300">
+                                    {% if answer.selected_choice and answer.selected_choice.explanation %}
+                                        {{ answer.selected_choice.explanation }}
+                                    {% elif answer.question.explanation %}
+                                        {{ answer.question.explanation }}
+                                    {% else %}
+                                        No explanation provided.
+                                    {% endif %}
+                                </p>
                             </div>
                         </div>
+                        {% elif answer.question.question_type == 'true_false' %}
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-400 mb-1">Your Answer:</p>
+                                <p class="{% if answer.is_correct %}text-green-400{% else %}text-red-400{% endif %}">
+                                    {% if answer.text_answer %}
+                                        {% if answer.is_correct %}
+                                            ✓ 
+                                        {% else %}
+                                            ✗ 
+                                        {% endif %}
+                                        {{ answer.text_answer }}
+                                    {% else %}
+                                        No answer provided
+                                    {% endif %}
+                                </p>
+                            </div>
+                            {% if not answer.is_correct %}
+                            <div>
+                                <p class="text-gray-400 mb-1">Correct Answer:</p>
+                                <p class="text-green-400">
+                                    {% for choice in answer.question.choices.all %}
+                                        {% if choice.is_correct %}
+                                            ✓ {{ choice.text }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <p class="text-gray-400 mb-1">Explanation:</p>
+                                <p class="text-gray-300">
+                                    {% if answer.question.explanation %}
+                                        {{ answer.question.explanation }}
+                                    {% else %}
+                                        No explanation provided.
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-400 mb-1">Your Answer:</p>
+                                <p class="text-gray-300">
+                                    {{ answer.text_answer|default:"No answer provided"|truncatewords:30 }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400 mb-1">Feedback:</p>
+                                <p class="text-gray-300">
+                                    {% if answer.ai_feedback %}
+                                        {{ answer.ai_feedback }}
+                                    {% else %}
+                                        This answer will be evaluated by an instructor.
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        {% endif %}
                         
                         <!-- AI Generated Explanation -->
+                        {% if answer.question.explanation %}
                         <div class="mt-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
                             <div class="flex items-start space-x-3">
                                 <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                                     <i class="fas fa-robot text-white text-xs"></i>
                                 </div>
                                 <div>
-                                    <h5 class="text-blue-300 font-medium mb-2">AI Tutor Explanation</h5>
+                                    <h5 class="text-blue-300 font-medium mb-2">Explanation</h5>
                                     <p class="text-blue-100 text-sm leading-relaxed">
-                                        Cross-validation is a statistical method used to estimate the performance of machine learning models. 
-                                        It works by dividing the dataset into multiple folds, training the model on some folds, and testing 
-                                        on others. This process is repeated multiple times to get a more robust estimate of model performance 
-                                        and helps detect overfitting.
+                                        {{ answer.question.explanation }}
                                     </p>
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-
-            <!-- Show More Button -->
-            <div class="text-center">
-                <button onclick="showMoreQuestions()" class="text-intellilearn-red hover:text-red-400 font-medium">
-                    <i class="fas fa-chevron-down mr-2"></i>Show All Questions (8 more)
-                </button>
-            </div>
+            {% endfor %}
         </div>
 
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <a href="/quizzes/" class="bg-intellilearn-gray-medium text-intellilearn-white px-8 py-3 rounded-lg hover:bg-intellilearn-gray-dark transition-colors text-center border border-intellilearn-gray-dark">
+            <a href="{% url 'quizzes:list' %}" class="bg-intellilearn-gray-medium text-intellilearn-white px-8 py-3 rounded-lg hover:bg-intellilearn-gray-dark transition-colors text-center border border-intellilearn-gray-dark">
                 <i class="fas fa-list mr-2"></i>Browse More Quizzes
             </a>
             
-            <a href="#" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-center">
+            {% if quiz.max_attempts == 0 or user_attempts|length < quiz.max_attempts %}
+            <a href="{% url 'quizzes:detail' quiz_id=quiz.id %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-center">
                 <i class="fas fa-redo mr-2"></i>Retake Quiz
             </a>
+            {% endif %}
             
-            <a href="/ai-tutor/chat/" class="bg-intellilearn-red text-white px-8 py-3 rounded-lg hover:bg-red-600 transition-colors text-center">
+            <a href="{% url 'ai_tutor:chat' %}" class="bg-intellilearn-red text-white px-8 py-3 rounded-lg hover:bg-red-600 transition-colors text-center">
                 <i class="fas fa-robot mr-2"></i>Chat with AI Tutor
             </a>
-        </div>
-
-        <!-- Share Results -->
-        <div class="text-center mt-8">
-            <p class="text-gray-400 mb-4">Share your achievement!</p>
-            <div class="flex justify-center space-x-4">
-                <button class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
-                    <i class="fab fa-twitter text-white"></i>
-                </button>
-                <button class="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center hover:bg-blue-900 transition-colors">
-                    <i class="fab fa-linkedin text-white"></i>
-                </button>
-                <button class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors">
-                    <i class="fab fa-whatsapp text-white"></i>
-                </button>
-            </div>
         </div>
     </div>
 </div>
@@ -326,24 +378,14 @@
 
 {% block extra_js %}
 <script>
-    function showMoreQuestions() {
-        // Implementation to show all questions
-        console.log('Showing all questions...');
-    }
-    
-    // Confetti animation for good scores
-    function celebrateScore() {
-        // Simple confetti effect
-        const score = 85; // Get from template context
-        if (score >= 80) {
-            // Add confetti animation
-            console.log('Celebrating high score!');
-        }
-    }
-    
-    // Initialize page
+    // Initialize progress bars
     document.addEventListener('DOMContentLoaded', function() {
-        celebrateScore();
+        // Trigger animation for progress bars
+        const progressBars = document.querySelectorAll('.progress-bar');
+        progressBars.forEach(bar => {
+            const width = bar.getAttribute('data-width') || '0';
+            bar.style.width = width + '%';
+        });
     });
 </script>
 {% endblock %}

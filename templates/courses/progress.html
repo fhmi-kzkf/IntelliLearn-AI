@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.title }} Progress - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumbs -->
+        <nav class="mb-6">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li>
+                    <a href="{% url 'home' %}" class="text-gray-400 hover:text-intellilearn-red">Home</a>
+                </li>
+                <li>
+                    <i class="fas fa-chevron-right text-gray-500 text-xs"></i>
+                </li>
+                <li>
+                    <a href="{% url 'courses:list' %}" class="text-gray-400 hover:text-intellilearn-red">Courses</a>
+                </li>
+                <li>
+                    <i class="fas fa-chevron-right text-gray-500 text-xs"></i>
+                </li>
+                <li>
+                    <a href="{% url 'courses:detail' slug=course.slug %}" class="text-gray-400 hover:text-intellilearn-red">{{ course.title }}</a>
+                </li>
+                <li>
+                    <i class="fas fa-chevron-right text-gray-500 text-xs"></i>
+                </li>
+                <li class="text-intellilearn-white">Progress</li>
+            </ol>
+        </nav>
+        
+        <!-- Course Progress Header -->
+        <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-intellilearn-white mb-2">{{ course.title }}</h1>
+                    <p class="text-gray-400">{{ course.short_description }}</p>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="relative">
+                        <div class="w-24 h-24 rounded-full border-8 border-intellilearn-gray-dark flex items-center justify-center">
+                            <span class="text-2xl font-bold text-intellilearn-white">{{ enrollment.progress_percentage|floatformat:0 }}%</span>
+                        </div>
+                        <div class="absolute inset-0 rounded-full border-8 border-intellilearn-red" 
+                             style="clip-path: polygon(50% 50%, 50% 0%, {% if enrollment.progress_percentage >= 25 %}100% 0{% else %}{{ enrollment.progress_percentage * 4 }}% 0{% endif %}%, {% if enrollment.progress_percentage >= 50 %}100% 100%{% else %}100% {{ enrollment.progress_percentage * 2 }}%{% endif %}, {% if enrollment.progress_percentage >= 75 %}0% 100%{% else %}{{ 100 - enrollment.progress_percentage * 1.33 }}% 100%{% endif %}, 0% 50%);"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="mt-6">
+                <div class="flex justify-between text-sm mb-2">
+                    <span class="text-gray-400">Overall Progress</span>
+                    <span class="text-intellilearn-white">{{ enrollment.progress_percentage|floatformat:1 }}%</span>
+                </div>
+                <div class="w-full bg-intellilearn-gray-dark rounded-full h-3">
+                    <div class="bg-intellilearn-red h-3 rounded-full" style="width: {{ enrollment.progress_percentage }}%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Details -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Lessons Progress -->
+            <div class="lg:col-span-2">
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark mb-8">
+                    <h2 class="text-xl font-bold text-intellilearn-white mb-6">Lesson Progress</h2>
+                    
+                    <div class="space-y-4">
+                        {% for lesson in course.lessons.all %}
+                        <div class="flex items-center p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full {% if lesson in completed_lessons.all %}bg-green-500{% else %}bg-intellilearn-gray-medium{% endif %} flex items-center justify-center mr-4">
+                                {% if lesson in completed_lessons.all %}
+                                <i class="fas fa-check text-white"></i>
+                                {% else %}
+                                <i class="fas fa-play text-gray-400"></i>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-medium text-intellilearn-white">{{ lesson.title }}</h3>
+                                <p class="text-sm text-gray-400">{{ lesson.estimated_reading_time }} min</p>
+                            </div>
+                            <div class="text-gray-400 text-sm">
+                                {% if lesson.content_type == 'video' %}
+                                    <i class="fas fa-video"></i>
+                                {% elif lesson.content_type == 'interactive' %}
+                                    <i class="fas fa-laptop"></i>
+                                {% elif lesson.content_type == 'code' %}
+                                    <i class="fas fa-code"></i>
+                                {% else %}
+                                    <i class="fas fa-file-alt"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Quiz Progress -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <h2 class="text-xl font-bold text-intellilearn-white mb-6">Quiz Progress</h2>
+                    
+                    <div class="space-y-4">
+                        {% for quiz in course.quiz_set.all %}
+                        <div class="flex items-center p-4 bg-intellilearn-gray-dark rounded-lg">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-intellilearn-gray-medium flex items-center justify-center mr-4">
+                                <i class="fas fa-question-circle text-gray-400"></i>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-medium text-intellilearn-white">{{ quiz.title }}</h3>
+                                <p class="text-sm text-gray-400">{{ quiz.question_set.count }} questions</p>
+                            </div>
+                            <div class="text-gray-400 text-sm">
+                                {% if quiz.difficulty == 'easy' %}
+                                    <span class="bg-green-900 text-green-300 px-2 py-1 rounded-full text-xs">Easy</span>
+                                {% elif quiz.difficulty == 'medium' %}
+                                    <span class="bg-yellow-900 text-yellow-300 px-2 py-1 rounded-full text-xs">Medium</span>
+                                {% else %}
+                                    <span class="bg-red-900 text-red-300 px-2 py-1 rounded-full text-xs">Hard</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-gray-400 text-center py-4">No quizzes available for this course yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div>
+                <!-- Badges Earned -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark mb-8">
+                    <h3 class="font-bold text-intellilearn-white mb-4">Badges Earned</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 bg-intellilearn-gray-dark rounded-lg">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mr-3">
+                                <i class="fas fa-graduation-cap text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-intellilearn-white text-sm">Course Completer</div>
+                                <div class="text-xs text-gray-400">Complete this course</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-intellilearn-gray-dark rounded-lg">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center mr-3">
+                                <i class="fas fa-trophy text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-intellilearn-white text-sm">Quiz Master</div>
+                                <div class="text-xs text-gray-400">Score 100% on all quizzes</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-intellilearn-gray-dark rounded-lg">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mr-3">
+                                <i class="fas fa-fire text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-intellilearn-white text-sm">Learning Streak</div>
+                                <div class="text-xs text-gray-400">7 consecutive days</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course Stats -->
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <h3 class="font-bold text-intellilearn-white mb-4">Course Stats</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Lessons</span>
+                                <span class="text-intellilearn-white">{{ course.lessons.count }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Completed</span>
+                                <span class="text-intellilearn-white">{{ completed_lessons.count }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Quizzes</span>
+                                <span class="text-intellilearn-white">{{ course.quiz_set.count }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Points</span>
+                                <span class="text-intellilearn-white">{{ course.points_reward }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Enrolled</span>
+                                <span class="text-intellilearn-white">{{ enrollment.enrolled_at|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'courses:learn' course_slug=course.slug %}" class="mt-6 block w-full bg-intellilearn-red text-white text-center py-3 rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-play mr-2"></i>Continue Learning
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

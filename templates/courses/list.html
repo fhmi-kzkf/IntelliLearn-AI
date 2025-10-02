@@ -39,11 +39,9 @@
                     
                     <select class="bg-intellilearn-gray-dark text-intellilearn-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-intellilearn-red border border-intellilearn-gray-dark">
                         <option value="">All Categories</option>
-                        <option value="machine-learning">Machine Learning</option>
-                        <option value="deep-learning">Deep Learning</option>
-                        <option value="nlp">Natural Language Processing</option>
-                        <option value="computer-vision">Computer Vision</option>
-                        <option value="ai-ethics">AI Ethics</option>
+                        {% for category in categories %}
+                        <option value="{{ category.slug }}">{{ category.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -53,36 +51,13 @@
         <div class="mb-8">
             <h2 class="text-xl font-bold text-intellilearn-white mb-4">Browse by Category</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <a href="#" class="bg-intellilearn-gray-medium rounded-lg p-4 text-center hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
-                    <i class="fas fa-brain text-blue-400 text-2xl mb-2"></i>
-                    <div class="text-intellilearn-white text-sm font-medium">Machine Learning</div>
-                    <div class="text-gray-400 text-xs">12 courses</div>
+                {% for category in categories %}
+                <a href="{% url 'courses:category' slug=category.slug %}" class="bg-intellilearn-gray-medium rounded-lg p-4 text-center hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
+                    <i class="{{ category.icon }} text-2xl mb-2" style="color: {{ category.color }};"></i>
+                    <div class="text-intellilearn-white text-sm font-medium">{{ category.name }}</div>
+                    <div class="text-gray-400 text-xs">{{ category.courses.count }} courses</div>
                 </a>
-                <a href="#" class="bg-intellilearn-gray-medium rounded-lg p-4 text-center hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
-                    <i class="fas fa-network-wired text-green-400 text-2xl mb-2"></i>
-                    <div class="text-intellilearn-white text-sm font-medium">Deep Learning</div>
-                    <div class="text-gray-400 text-xs">8 courses</div>
-                </a>
-                <a href="#" class="bg-intellilearn-gray-medium rounded-lg p-4 text-center hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
-                    <i class="fas fa-comments text-purple-400 text-2xl mb-2"></i>
-                    <div class="text-intellilearn-white text-sm font-medium">NLP</div>
-                    <div class="text-gray-400 text-xs">6 courses</div>
-                </a>
-                <a href="#" class="bg-intellilearn-gray-medium rounded-lg p-4 text-center hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
-                    <i class="fas fa-eye text-orange-400 text-2xl mb-2"></i>
-                    <div class="text-intellilearn-white text-sm font-medium">Computer Vision</div>
-                    <div class="text-gray-400 text-xs">5 courses</div>
-                </a>
-                <a href="#" class="bg-intellilearn-gray-medium rounded-lg p-4 text-center hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
-                    <i class="fas fa-robot text-teal-400 text-2xl mb-2"></i>
-                    <div class="text-intellilearn-white text-sm font-medium">Robotics</div>
-                    <div class="text-gray-400 text-xs">4 courses</div>
-                </a>
-                <a href="#" class="bg-intellilearn-gray-medium rounded-lg p-4 text-center hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
-                    <i class="fas fa-balance-scale text-red-400 text-2xl mb-2"></i>
-                    <div class="text-intellilearn-white text-sm font-medium">AI Ethics</div>
-                    <div class="text-gray-400 text-xs">3 courses</div>
-                </a>
+                {% endfor %}
             </div>
         </div>
         
@@ -90,210 +65,65 @@
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-xl font-bold text-intellilearn-white">Available Courses</h2>
-                <div class="text-gray-400 text-sm">Showing 6 of 38 courses</div>
+                <div class="text-gray-400 text-sm">Showing {{ courses.count }} courses</div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Sample Course 1 -->
+                {% for course in courses %}
                 <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
-                    <div class="h-48 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-                        <i class="fas fa-brain text-white text-4xl"></i>
-                    </div>
+                    {% if course.thumbnail %}
+                        <img src="{{ course.thumbnail.url }}" alt="{{ course.title }}" class="h-48 w-full object-cover">
+                    {% else %}
+                        <div class="h-48 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-4xl"></i>
+                        </div>
+                    {% endif %}
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded-full">Beginner</span>
-                            <span class="text-gray-400 text-xs">5-10 min lessons</span>
+                            <span class="{{ course.get_level_color }} text-xs px-2 py-1 rounded-full">
+                                {{ course.get_level_display }}
+                            </span>
+                            <span class="text-gray-400 text-xs">{{ course.estimated_duration }} min lessons</span>
                         </div>
-                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">Introduction to Machine Learning</h3>
+                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">{{ course.title }}</h3>
                         <p class="text-gray-400 text-sm mb-4">
-                            Learn the fundamentals of machine learning with hands-on examples and real-world applications.
+                            {{ course.short_description|truncatewords:15 }}
                         </p>
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center space-x-4 text-xs text-gray-400">
-                                <span><i class="fas fa-play-circle mr-1"></i>12 lessons</span>
-                                <span><i class="fas fa-clock mr-1"></i>2.5 hours</span>
-                                <span><i class="fas fa-users mr-1"></i>1,234</span>
+                                <span><i class="fas fa-play-circle mr-1"></i>{{ course.lessons.count }} lessons</span>
+                                <span><i class="fas fa-clock mr-1"></i>{{ course.estimated_duration }} hours</span>
+                                <span><i class="fas fa-users mr-1"></i>{{ course.enrollment_count }}</span>
                             </div>
                         </div>
                         <div class="flex space-x-2">
-                            <button class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1">
+                            <a href="{% url 'courses:detail' slug=course.slug %}" class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1 text-center">
                                 Enroll Now
-                            </button>
+                            </a>
                             <button class="border border-intellilearn-gray-dark text-gray-400 px-3 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
                                 <i class="fas fa-bookmark"></i>
                             </button>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Sample Course 2 -->
-                <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
-                    <div class="h-48 bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center">
-                        <i class="fas fa-network-wired text-white text-4xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded-full">Intermediate</span>
-                            <span class="text-gray-400 text-xs">10-15 min lessons</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">Neural Networks Deep Dive</h3>
-                        <p class="text-gray-400 text-sm mb-4">
-                            Master neural networks from perceptrons to deep architectures with practical implementations.
-                        </p>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center space-x-4 text-xs text-gray-400">
-                                <span><i class="fas fa-play-circle mr-1"></i>16 lessons</span>
-                                <span><i class="fas fa-clock mr-1"></i>4 hours</span>
-                                <span><i class="fas fa-users mr-1"></i>856</span>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1">
-                                Enroll Now
-                            </button>
-                            <button class="border border-intellilearn-gray-dark text-gray-400 px-3 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
-                                <i class="fas fa-bookmark"></i>
-                            </button>
-                        </div>
-                    </div>
+                {% empty %}
+                <div class="col-span-3 text-center py-12">
+                    <i class="fas fa-book-open text-gray-500 text-4xl mb-4"></i>
+                    <h3 class="text-xl font-medium text-gray-400 mb-2">No courses available</h3>
+                    <p class="text-gray-500">Check back later for new courses.</p>
                 </div>
-                
-                <!-- Sample Course 3 -->
-                <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
-                    <div class="h-48 bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center">
-                        <i class="fas fa-comments text-white text-4xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded-full">Intermediate</span>
-                            <span class="text-gray-400 text-xs">8-12 min lessons</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">Natural Language Processing</h3>
-                        <p class="text-gray-400 text-sm mb-4">
-                            Explore text processing, sentiment analysis, and language models with practical projects.
-                        </p>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center space-x-4 text-xs text-gray-400">
-                                <span><i class="fas fa-play-circle mr-1"></i>14 lessons</span>
-                                <span><i class="fas fa-clock mr-1"></i>3.5 hours</span>
-                                <span><i class="fas fa-users mr-1"></i>642</span>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1">
-                                Enroll Now
-                            </button>
-                            <button class="border border-intellilearn-gray-dark text-gray-400 px-3 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
-                                <i class="fas fa-bookmark"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Sample Course 4 -->
-                <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
-                    <div class="h-48 bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center">
-                        <i class="fas fa-eye text-white text-4xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="bg-red-900 text-red-300 text-xs px-2 py-1 rounded-full">Advanced</span>
-                            <span class="text-gray-400 text-xs">15-20 min lessons</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">Computer Vision Mastery</h3>
-                        <p class="text-gray-400 text-sm mb-4">
-                            Advanced image processing, object detection, and vision transformer architectures.
-                        </p>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center space-x-4 text-xs text-gray-400">
-                                <span><i class="fas fa-play-circle mr-1"></i>20 lessons</span>
-                                <span><i class="fas fa-clock mr-1"></i>6 hours</span>
-                                <span><i class="fas fa-users mr-1"></i>428</span>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1">
-                                Enroll Now
-                            </button>
-                            <button class="border border-intellilearn-gray-dark text-gray-400 px-3 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
-                                <i class="fas fa-bookmark"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Sample Course 5 -->
-                <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
-                    <div class="h-48 bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center">
-                        <i class="fas fa-code text-white text-4xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded-full">Beginner</span>
-                            <span class="text-gray-400 text-xs">10-15 min lessons</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">Python for AI Development</h3>
-                        <p class="text-gray-400 text-sm mb-4">
-                            Learn Python programming specifically for AI and machine learning applications.
-                        </p>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center space-x-4 text-xs text-gray-400">
-                                <span><i class="fas fa-play-circle mr-1"></i>18 lessons</span>
-                                <span><i class="fas fa-clock mr-1"></i>5 hours</span>
-                                <span><i class="fas fa-users mr-1"></i>2,156</span>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1">
-                                Enroll Now
-                            </button>
-                            <button class="border border-intellilearn-gray-dark text-gray-400 px-3 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
-                                <i class="fas fa-bookmark"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Sample Course 6 -->
-                <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
-                    <div class="h-48 bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center">
-                        <i class="fas fa-balance-scale text-white text-4xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded-full">Intermediate</span>
-                            <span class="text-gray-400 text-xs">8-12 min lessons</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">AI Ethics & Responsibility</h3>
-                        <p class="text-gray-400 text-sm mb-4">
-                            Understand ethical implications, bias prevention, and responsible AI development practices.
-                        </p>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center space-x-4 text-xs text-gray-400">
-                                <span><i class="fas fa-play-circle mr-1"></i>10 lessons</span>
-                                <span><i class="fas fa-clock mr-1"></i>2 hours</span>
-                                <span><i class="fas fa-users mr-1"></i>724</span>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1">
-                                Enroll Now
-                            </button>
-                            <button class="border border-intellilearn-gray-dark text-gray-400 px-3 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
-                                <i class="fas fa-bookmark"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
         
         <!-- Load More -->
+        {% if courses.has_next %}
         <div class="text-center">
             <button class="bg-intellilearn-gray-medium text-intellilearn-white px-8 py-3 rounded-lg hover:bg-intellilearn-gray-dark transition-colors border border-intellilearn-gray-dark">
                 <i class="fas fa-plus mr-2"></i>Load More Courses
             </button>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

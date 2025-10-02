@@ -41,6 +41,13 @@ urlpatterns = [
     path('gamification/', include('gamification.urls')),
     path('ai-tutor/', include('ai_tutor.urls')),
     
+    # API URLs
+    path('api/accounts/', include('accounts.urls')),
+    path('api/courses/', include('courses.urls')),
+    path('api/quizzes/', include('quizzes.urls')),
+    path('api/gamification/', include('gamification.urls')),
+    path('api/ai-tutor/', include('ai_tutor.urls')),
+    
     # Dashboard
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('admin-dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),

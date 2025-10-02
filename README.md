@@ -14,6 +14,7 @@
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [API Endpoints](#api-endpoints)
+- [Mobile App Integration (Flutter)](#mobile-app-integration-flutter)
 - [User Roles](#user-roles)
 - [Contributing](#contributing)
 - [License](#license)
@@ -190,24 +191,51 @@ intellilearn/
 ## 🔗 API Endpoints
 
 ### Authentication
-- `POST /accounts/login/` - User login
-- `POST /accounts/register/` - User registration
-- `POST /accounts/logout/` - User logout
+- `POST /api/accounts/api/login/` - User login
+- `POST /api/accounts/api/register/` - User registration
+- `POST /api/accounts/api/logout/` - User logout
 
 ### Courses
-- `GET /courses/` - List all courses
-- `GET /courses/<id>/` - Course details
-- `GET /courses/my-courses/` - User's enrolled courses
+- `GET /api/courses/api/categories/` - List all course categories
+- `GET /api/courses/api/available-courses/` - List all available courses
+- `GET /api/courses/api/courses/{slug}/` - Get course details
+- `POST /api/courses/api/courses/{course_id}/enroll/` - Enroll in a course
+- `GET /api/courses/api/my-enrollments/` - Get user's enrollments
+- `GET /api/courses/api/courses/{course_id}/progress/` - Get course progress
+- `POST /api/courses/api/courses/{course_id}/lessons/{lesson_id}/complete/` - Mark lesson as complete
 
 ### Quizzes
-- `GET /quizzes/` - List all quizzes
-- `POST /quizzes/<id>/start/` - Start quiz attempt
-- `POST /quizzes/<id>/submit/` - Submit quiz answers
+- `GET /api/quizzes/api/quizzes/` - List all quizzes
+- `GET /api/quizzes/api/quizzes/{id}/` - Get quiz details
+- `POST /api/quizzes/api/quizzes/{quiz_id}/start/` - Start quiz attempt
+- `POST /api/quizzes/api/quizzes/{quiz_id}/attempt/{attempt_id}/submit/` - Submit quiz answers
+- `GET /api/quizzes/api/quizzes/{quiz_id}/attempt/{attempt_id}/results/` - Get quiz results
+- `GET /api/quizzes/api/my-attempts/` - Get user's quiz attempts
 
 ### Gamification
-- `GET /gamification/badges/` - Available badges
-- `GET /gamification/leaderboard/` - Global leaderboard
-- `GET /gamification/my-badges/` - User's earned badges
+- `GET /api/gamification/api/badges/` - List all available badges
+- `GET /api/gamification/api/my-badges/` - Get user's earned badges
+- `GET /api/gamification/api/badges/available/` - List badges not yet earned
+- `GET /api/gamification/api/points/history/` - Get user's points history
+- `GET /api/gamification/api/leaderboard/` - Get global leaderboard
+- `GET /api/gamification/api/streak/` - Get user's learning streak
+- `GET /api/gamification/api/user/stats/` - Get user statistics
+
+## 📱 Mobile App Integration (Flutter)
+
+The IntelliLearn AI platform includes a comprehensive REST API that enables mobile app integration without requiring any additional UI templates. A complete Flutter integration is possible using the provided API endpoints.
+
+### Key Features for Mobile Integration:
+1. **Complete Authentication System** - Login, registration, and session management
+2. **Full Course Management** - Browse courses, enroll, track progress
+3. **Quiz System** - Take quizzes, submit answers, view results
+4. **Gamification** - Badges, points, leaderboards, and streaks
+5. **User Profiles** - Profile management and statistics
+
+### Integration Resources:
+- [API Documentation](API_DOCUMENTATION.md) - Detailed API endpoint documentation
+- [Flutter Integration Guide](FLUTTER_INTEGRATION_GUIDE.md) - Complete Flutter implementation guide
+- [Integration Summary](FLUTTER_INTEGRATION_SUMMARY.md) - Summary of all API features
 
 ## 👥 User Roles
 

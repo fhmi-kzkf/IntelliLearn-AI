@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Quiz Detail - IntelliLearn AI{% endblock %}
+{% block title %}{{ quiz.title }} - IntelliLearn AI{% endblock %}
 
 {% block content %}
 <div class="min-h-screen bg-intellilearn-black py-8">
@@ -19,27 +19,53 @@
                     <i class="fas fa-question-circle text-white text-2xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold text-intellilearn-white">Machine Learning Fundamentals Quiz</h1>
-                    <p class="text-gray-400 mt-1">Test your understanding of basic ML concepts</p>
+                    <h1 class="text-3xl font-bold text-intellilearn-white">{{ quiz.title }}</h1>
+                    <p class="text-gray-400 mt-1">{{ quiz.description|truncatewords:20 }}</p>
                 </div>
             </div>
             
             <!-- Quiz Stats -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                 <div class="text-center">
-                    <div class="text-2xl font-bold text-intellilearn-white mb-1">10</div>
+                    <div class="text-2xl font-bold text-intellilearn-white mb-1">{{ question_count }}</div>
                     <div class="text-sm text-gray-400">Questions</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-2xl font-bold text-intellilearn-white mb-1">15</div>
-                    <div class="text-sm text-gray-400">Minutes</div>
+                    <div class="text-2xl font-bold text-intellilearn-white mb-1">
+                        {% if quiz.time_limit > 0 %}
+                            {{ quiz.time_limit }}
+                        {% else %}
+                            No Limit
+                        {% endif %}
+                    </div>
+                    <div class="text-sm text-gray-400">
+                        {% if quiz.time_limit > 0 %}
+                            Minutes
+                        {% else %}
+                            Time
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="text-center">
-                    <div class="text-2xl font-bold text-intellilearn-white mb-1">3</div>
-                    <div class="text-sm text-gray-400">Attempts Left</div>
+                    <div class="text-2xl font-bold text-intellilearn-white mb-1">
+                        {% if quiz.max_attempts > 0 %}
+                            {% with user_attempts_count=user_attempts|length %}
+                                {{ quiz.max_attempts|add:"-user_attempts_count" }}
+                            {% endwith %}
+                        {% else %}
+                            Unlimited
+                        {% endif %}
+                    </div>
+                    <div class="text-sm text-gray-400">
+                        {% if quiz.max_attempts > 0 %}
+                            Attempts Left
+                        {% else %}
+                            Attempts
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="text-center">
-                    <div class="text-2xl font-bold text-intellilearn-white mb-1">100</div>
+                    <div class="text-2xl font-bold text-intellilearn-white mb-1">{{ quiz.get_total_points }}</div>
                     <div class="text-sm text-gray-400">Max Points</div>
                 </div>
             </div>
@@ -47,13 +73,15 @@
             <!-- Difficulty Level -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <span class="bg-green-900 text-green-300 text-sm px-3 py-1 rounded-full">
-                        <i class="fas fa-star mr-1"></i>Beginner
+                    <span class="{{ quiz.get_difficulty_color }} text-sm px-3 py-1 rounded-full">
+                        <i class="fas fa-signal mr-1"></i>{{ quiz.get_difficulty_display }}
                     </span>
-                    <span class="text-gray-400 text-sm">Category: Machine Learning</span>
+                    {% if quiz.course %}
+                        <span class="text-gray-400 text-sm">Category: {{ quiz.course.category.name }}</span>
+                    {% endif %}
                 </div>
                 <div class="text-sm text-gray-400">
-                    <i class="fas fa-users mr-1"></i>1,234 students completed
+                    <i class="fas fa-users mr-1"></i>{{ attempt_count }} students completed
                 </div>
             </div>
         </div>
@@ -62,36 +90,66 @@
         <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark mb-8">
             <h2 class="text-xl font-bold text-intellilearn-white mb-4">About This Quiz</h2>
             <p class="text-gray-300 mb-4">
-                This quiz covers fundamental concepts in machine learning including supervised learning, 
-                unsupervised learning, and basic algorithms. You'll be tested on your understanding of 
-                key terminology, concepts, and practical applications.
+                {{ quiz.description }}
             </p>
             
-            <h3 class="text-lg font-semibold text-intellilearn-white mb-3">Topics Covered:</h3>
+            {% if quiz.course %}
+            <h3 class="text-lg font-semibold text-intellilearn-white mb-3">Course:</h3>
+            <div class="flex items-center space-x-2 mb-4">
+                <i class="fas fa-graduation-cap text-intellilearn-red"></i>
+                <span class="text-gray-300">{{ quiz.course.title }}</span>
+            </div>
+            {% endif %}
+            
+            <h3 class="text-lg font-semibold text-intellilearn-white mb-3">Quiz Details:</h3>
             <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-300">
                 <li class="flex items-center space-x-2">
-                    <i class="fas fa-check text-intellilearn-red"></i>
-                    <span>Types of Machine Learning</span>
+                    <i class="fas fa-list-ol text-intellilearn-red"></i>
+                    <span>{{ question_count }} questions</span>
                 </li>
                 <li class="flex items-center space-x-2">
-                    <i class="fas fa-check text-intellilearn-red"></i>
-                    <span>Supervised vs Unsupervised Learning</span>
+                    <i class="fas fa-clock text-intellilearn-red"></i>
+                    <span>
+                        {% if quiz.time_limit > 0 %}
+                            {{ quiz.time_limit }} minutes time limit
+                        {% else %}
+                            No time limit
+                        {% endif %}
+                    </span>
                 </li>
                 <li class="flex items-center space-x-2">
-                    <i class="fas fa-check text-intellilearn-red"></i>
-                    <span>Common Algorithms</span>
+                    <i class="fas fa-sync-alt text-intellilearn-red"></i>
+                    <span>
+                        {% if quiz.max_attempts > 0 %}
+                            Maximum {{ quiz.max_attempts }} attempts
+                        {% else %}
+                            Unlimited attempts
+                        {% endif %}
+                    </span>
                 </li>
                 <li class="flex items-center space-x-2">
-                    <i class="fas fa-check text-intellilearn-red"></i>
-                    <span>Model Evaluation</span>
+                    <i class="fas fa-random text-intellilearn-red"></i>
+                    <span>
+                        {% if quiz.shuffle_questions %}
+                            Questions shuffled
+                        {% else %}
+                            Questions in order
+                        {% endif %}
+                    </span>
                 </li>
                 <li class="flex items-center space-x-2">
-                    <i class="fas fa-check text-intellilearn-red"></i>
-                    <span>Overfitting and Underfitting</span>
+                    <i class="fas fa-eye text-intellilearn-red"></i>
+                    <span>
+                        {% if quiz.show_correct_answers %}
+                            Correct answers shown
+                        {% else %}
+                            Correct answers hidden
+                        {% endif %}
+                    </span>
                 </li>
                 <li class="flex items-center space-x-2">
-                    <i class="fas fa-check text-intellilearn-red"></i>
-                    <span>Real-world Applications</span>
+                    <i class="fas fa-robot text-intellilearn-red"></i>
+                    <span>{{ quiz.get_source_display }}</span>
                 </li>
             </ul>
         </div>
@@ -105,15 +163,33 @@
                     <ul class="space-y-2 text-gray-300">
                         <li class="flex items-start space-x-2">
                             <i class="fas fa-clock text-intellilearn-red mt-1"></i>
-                            <span>You have 15 minutes to complete the quiz</span>
+                            <span>
+                                {% if quiz.time_limit > 0 %}
+                                    You have {{ quiz.time_limit }} minutes to complete the quiz
+                                {% else %}
+                                    No time limit for this quiz
+                                {% endif %}
+                            </span>
                         </li>
                         <li class="flex items-start space-x-2">
                             <i class="fas fa-redo text-intellilearn-red mt-1"></i>
-                            <span>Maximum 3 attempts allowed</span>
+                            <span>
+                                {% if quiz.max_attempts > 0 %}
+                                    Maximum {{ quiz.max_attempts }} attempts allowed
+                                {% else %}
+                                    Unlimited attempts allowed
+                                {% endif %}
+                            </span>
                         </li>
                         <li class="flex items-start space-x-2">
                             <i class="fas fa-eye text-intellilearn-red mt-1"></i>
-                            <span>Questions are shown one at a time</span>
+                            <span>
+                                {% if quiz.show_correct_answers %}
+                                    Correct answers will be shown after completion
+                                {% else %}
+                                    Correct answers will not be shown
+                                {% endif %}
+                            </span>
                         </li>
                         <li class="flex items-start space-x-2">
                             <i class="fas fa-save text-intellilearn-red mt-1"></i>
@@ -126,15 +202,21 @@
                     <ul class="space-y-2 text-gray-300">
                         <li class="flex items-start space-x-2">
                             <i class="fas fa-star text-intellilearn-red mt-1"></i>
-                            <span>Each question is worth 10 points</span>
+                            <span>Each question is worth {{ quiz.points_per_question }} points</span>
                         </li>
                         <li class="flex items-start space-x-2">
                             <i class="fas fa-trophy text-intellilearn-red mt-1"></i>
-                            <span>Pass grade: 70% (70 points)</span>
+                            <span>Pass grade: 70% ({{ pass_grade_points }} points)</span>
                         </li>
                         <li class="flex items-start space-x-2">
                             <i class="fas fa-medal text-intellilearn-red mt-1"></i>
-                            <span>Perfect score earns bonus badge</span>
+                            <span>
+                                {% if quiz.bonus_points > 0 %}
+                                    Perfect score earns {{ quiz.bonus_points }} bonus points
+                                {% else %}
+                                    Perfect score earns no bonus points
+                                {% endif %}
+                            </span>
                         </li>
                         <li class="flex items-start space-x-2">
                             <i class="fas fa-chart-line text-intellilearn-red mt-1"></i>
@@ -146,45 +228,76 @@
         </div>
         
         <!-- Previous Attempts -->
+        {% if user.is_authenticated and user_attempts %}
         <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark mb-8">
             <h2 class="text-xl font-bold text-intellilearn-white mb-4">Your Previous Attempts</h2>
             
             <div class="space-y-4">
-                <!-- Attempt 1 -->
+                {% for attempt in user_attempts %}
                 <div class="bg-intellilearn-gray-dark rounded-lg p-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                                <span class="text-white font-bold text-sm">1</span>
+                            <div class="w-10 h-10 {% if attempt.percentage >= 80 %}bg-green-500{% elif attempt.percentage >= 70 %}bg-yellow-500{% else %}bg-red-500{% endif %} rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold text-sm">{{ forloop.counter }}</span>
                             </div>
                             <div>
-                                <h3 class="text-intellilearn-white font-medium">Attempt 1</h3>
-                                <p class="text-gray-400 text-sm">Completed 3 days ago</p>
+                                <h3 class="text-intellilearn-white font-medium">Attempt {{ attempt.attempt_number }}</h3>
+                                <p class="text-gray-400 text-sm">Completed {{ attempt.completed_at|timesince }} ago</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <div class="text-lg font-bold text-green-400">85%</div>
-                            <div class="text-sm text-gray-400">85/100 points</div>
+                            <div class="text-lg font-bold {% if attempt.percentage >= 80 %}text-green-400{% elif attempt.percentage >= 70 %}text-yellow-400{% else %}text-red-400{% endif %}">
+                                {{ attempt.percentage|floatformat:1 }}%
+                            </div>
+                            <div class="text-sm text-gray-400">{{ attempt.score }}/{{ quiz.get_total_points }} points</div>
                         </div>
                     </div>
                 </div>
+                {% endfor %}
                 
-                <!-- No more attempts message -->
+                <!-- Attempts remaining message -->
                 <div class="text-center py-4 text-gray-400">
                     <i class="fas fa-info-circle mr-2"></i>
-                    You have 2 attempts remaining
+                    {% if quiz.max_attempts > 0 %}
+                        {% with user_attempts_count=user_attempts|length %}
+                            You have {{ quiz.max_attempts|add:"-user_attempts_count" }} attempts remaining
+                        {% endwith %}
+                    {% else %}
+                        You have unlimited attempts remaining
+                    {% endif %}
                 </div>
             </div>
         </div>
+        {% endif %}
         
         <!-- Start Quiz Button -->
         <div class="text-center">
-            <form method="post" action="{% url 'quizzes:start' quiz_id=1 %}">
-                {% csrf_token %}
-                <button type="submit" class="bg-intellilearn-red text-white px-8 py-4 rounded-lg hover:bg-red-600 transition-colors font-bold text-lg">
-                    <i class="fas fa-play mr-2"></i>Start Quiz
-                </button>
-            </form>
+            {% if user.is_authenticated %}
+                {% if quiz.max_attempts > 0 and user_attempts|length >= quiz.max_attempts %}
+                    <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark mb-4">
+                        <p class="text-gray-400">
+                            <i class="fas fa-exclamation-circle text-yellow-500 mr-2"></i>
+                            You have reached the maximum number of attempts for this quiz.
+                        </p>
+                    </div>
+                {% else %}
+                    <form method="post" action="{% url 'quizzes:start' quiz_id=quiz.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-intellilearn-red text-white px-8 py-4 rounded-lg hover:bg-red-600 transition-colors font-bold text-lg">
+                            <i class="fas fa-play mr-2"></i>Start Quiz
+                        </button>
+                    </form>
+                {% endif %}
+            {% else %}
+                <div class="bg-intellilearn-gray-medium rounded-lg p-4 border border-intellilearn-gray-dark mb-4">
+                    <p class="text-gray-400">
+                        <i class="fas fa-user-lock text-yellow-500 mr-2"></i>
+                        You need to be logged in to start this quiz.
+                        <a href="{% url 'accounts:login' %}" class="text-intellilearn-red hover:text-red-400">Log in</a> or 
+                        <a href="{% url 'accounts:register' %}" class="text-intellilearn-red hover:text-red-400">register</a> to continue.
+                    </p>
+                </div>
+            {% endif %}
             
             <p class="text-gray-400 text-sm mt-4">
                 Make sure you have a stable internet connection before starting

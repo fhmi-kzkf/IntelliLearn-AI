@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ lesson.title }} - {{ course.title }} - IntelliLearn AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-intellilearn-black py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumbs -->
+        <nav class="mb-6">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li>
+                    <a href="{% url 'home' %}" class="text-gray-400 hover:text-intellilearn-red">Home</a>
+                </li>
+                <li>
+                    <i class="fas fa-chevron-right text-gray-500 text-xs"></i>
+                </li>
+                <li>
+                    <a href="{% url 'courses:list' %}" class="text-gray-400 hover:text-intellilearn-red">Courses</a>
+                </li>
+                <li>
+                    <i class="fas fa-chevron-right text-gray-500 text-xs"></i>
+                </li>
+                <li>
+                    <a href="{% url 'courses:detail' slug=course.slug %}" class="text-gray-400 hover:text-intellilearn-red">{{ course.title }}</a>
+                </li>
+                <li>
+                    <i class="fas fa-chevron-right text-gray-500 text-xs"></i>
+                </li>
+                <li class="text-intellilearn-white">{{ lesson.title }}</li>
+            </ol>
+        </nav>
+        
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar - Course Lessons -->
+            <div class="lg:w-1/4">
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark sticky top-8">
+                    <h3 class="font-bold text-intellilearn-white mb-4">{{ course.title }}</h3>
+                    
+                    <div class="space-y-2">
+                        {% for course_lesson in lessons %}
+                        <a href="{% url 'courses:lesson' course_slug=course.slug lesson_slug=course_lesson.slug %}" 
+                           class="block p-3 rounded-lg {% if course_lesson.id == lesson.id %}bg-intellilearn-red text-white{% else %}hover:bg-intellilearn-gray-dark text-gray-300{% endif %}">
+                            <div class="flex items-center">
+                                {% if enrollment.completed_lessons.all and course_lesson in enrollment.completed_lessons.all %}
+                                <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                                {% else %}
+                                <i class="fas fa-play-circle mr-2"></i>
+                                {% endif %}
+                                <span class="text-sm">{{ course_lesson.title }}</span>
+                            </div>
+                            <div class="text-xs mt-1 ml-6 {% if course_lesson.id == lesson.id %}text-gray-200{% else %}text-gray-500{% endif %}">
+                                {{ course_lesson.estimated_reading_time }} min
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Course Progress -->
+                    <div class="mt-6 pt-4 border-t border-intellilearn-gray-dark">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-400">Course Progress</span>
+                            <span class="text-intellilearn-white">{{ enrollment.progress_percentage|floatformat:0 }}%</span>
+                        </div>
+                        <div class="w-full bg-intellilearn-gray-dark rounded-full h-2">
+                            <div class="bg-intellilearn-red h-2 rounded-full" style="width: {{ enrollment.progress_percentage }}%"></div>
+                        </div>
+                        <a href="{% url 'courses:progress' slug=course.slug %}" class="text-intellilearn-red hover:text-red-400 text-sm mt-2 inline-block">
+                            <i class="fas fa-chart-line mr-1"></i>View Detailed Progress
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content - Lesson -->
+            <div class="lg:w-3/4">
+                <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <!-- Lesson Header -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h1 class="text-2xl font-bold text-intellilearn-white">{{ lesson.title }}</h1>
+                            <span class="bg-intellilearn-gray-dark text-gray-400 text-sm px-3 py-1 rounded-full">
+                                {{ lesson.estimated_reading_time }} min read
+                            </span>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2">
+                            <span class="{{ course.get_level_color }} text-xs px-2 py-1 rounded-full">
+                                {{ course.get_level_display }}
+                            </span>
+                            <span class="bg-intellilearn-gray-dark text-gray-400 text-xs px-2 py-1 rounded-full">
+                                {% if lesson.content_type == 'video' %}
+                                    <i class="fas fa-video mr-1"></i>Video
+                                {% elif lesson.content_type == 'interactive' %}
+                                    <i class="fas fa-laptop mr-1"></i>Interactive
+                                {% elif lesson.content_type == 'code' %}
+                                    <i class="fas fa-code mr-1"></i>Code Example
+                                {% else %}
+                                    <i class="fas fa-file-alt mr-1"></i>Text
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Lesson Content -->
+                    <div class="prose prose-invert max-w-none mb-8">
+                        {% if lesson.content_type == 'video' and lesson.video_url %}
+                        <div class="relative pb-9/16 mb-6">
+                            <iframe src="{{ lesson.video_url }}" 
+                                    class="absolute w-full h-full rounded-lg" 
+                                    frameborder="0" 
+                                    allowfullscreen></iframe>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="text-gray-300 mb-6">
+                            {{ lesson.content|linebreaks }}
+                        </div>
+                        
+                        {% if lesson.content_type == 'code' and lesson.code_example %}
+                        <div class="bg-intellilearn-gray-dark rounded-lg p-4 mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-400 text-sm">Code Example</span>
+                                <button class="text-intellilearn-red hover:text-red-400 text-sm">
+                                    <i class="fas fa-copy mr-1"></i>Copy
+                                </button>
+                            </div>
+                            <pre class="text-gray-300 text-sm overflow-x-auto"><code>{{ lesson.code_example }}</code></pre>
+                        </div>
+                        {% endif %}
+                        
+                        {% if lesson.learning_objectives %}
+                        <div class="bg-blue-900/20 border border-blue-800 rounded-lg p-4 mb-6">
+                            <h3 class="font-bold text-blue-400 mb-2">
+                                <i class="fas fa-bullseye mr-2"></i>Learning Objectives
+                            </h3>
+                            <p class="text-gray-300">{{ lesson.learning_objectives }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if lesson.key_concepts %}
+                        <div class="bg-purple-900/20 border border-purple-800 rounded-lg p-4">
+                            <h3 class="font-bold text-purple-400 mb-2">
+                                <i class="fas fa-key mr-2"></i>Key Concepts
+                            </h3>
+                            <p class="text-gray-300">{{ lesson.key_concepts }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Lesson Navigation -->
+                    <div class="flex flex-wrap items-center justify-between pt-6 border-t border-intellilearn-gray-dark">
+                        {% with prev_lesson=lessons|dictsort:"order"|slice:":1"|first %}
+                        {% if prev_lesson and prev_lesson.id != lesson.id %}
+                        <a href="{% url 'courses:lesson' course_slug=course.slug lesson_slug=prev_lesson.slug %}" 
+                           class="text-intellilearn-red hover:text-red-400 flex items-center">
+                            <i class="fas fa-arrow-left mr-2"></i>Previous Lesson
+                        </a>
+                        {% else %}
+                        <div></div>
+                        {% endif %}
+                        {% endwith %}
+                        
+                        <form method="post" action="{% url 'courses:complete_lesson' course_slug=course.slug lesson_slug=lesson.slug %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                                <i class="fas fa-check mr-2"></i>Mark as Complete
+                            </button>
+                        </form>
+                        
+                        {% with next_lesson=lessons|dictsort:"order"|slice:"1:"|first %}
+                        {% if next_lesson %}
+                        <a href="{% url 'courses:lesson' course_slug=course.slug lesson_slug=next_lesson.slug %}" 
+                           class="text-intellilearn-red hover:text-red-400 flex items-center">
+                            Next Lesson <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'courses:detail' slug=course.slug %}" 
+                           class="text-intellilearn-red hover:text-red-400 flex items-center">
+                            Back to Course <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+                
+                <!-- Badges Earned -->
+                <div class="mt-8 bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                    <h3 class="font-bold text-intellilearn-white mb-4">Badges You Can Earn</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="flex items-center p-3 bg-intellilearn-gray-dark rounded-lg">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mr-3">
+                                <i class="fas fa-graduation-cap text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-intellilearn-white text-sm">Course Completer</div>
+                                <div class="text-xs text-gray-400">Complete this course</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-intellilearn-gray-dark rounded-lg">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center mr-3">
+                                <i class="fas fa-trophy text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-intellilearn-white text-sm">Quiz Master</div>
+                                <div class="text-xs text-gray-400">Score 100% on all quizzes</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-intellilearn-gray-dark rounded-lg">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mr-3">
+                                <i class="fas fa-fire text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-intellilearn-white text-sm">Learning Streak</div>
+                                <div class="text-xs text-gray-400">7 consecutive days</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

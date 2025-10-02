@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import api_views
 
 app_name = 'quizzes'
 
@@ -27,4 +28,13 @@ urlpatterns = [
     # AI-generated content
     path('<int:quiz_id>/generate-questions/', views.GenerateQuestionsView.as_view(), name='generate_questions'),
     path('ai-suggestions/', views.AIQuizSuggestionsView.as_view(), name='ai_suggestions'),
+    
+    # API endpoints
+    path('api/quizzes/', api_views.QuizListView.as_view(), name='api_quiz_list'),
+    path('api/quizzes/<int:pk>/', api_views.QuizDetailView.as_view(), name='api_quiz_detail'),
+    path('api/quizzes/<int:quiz_id>/start/', api_views.start_quiz_attempt, name='api_start_quiz'),
+    path('api/quizzes/<int:quiz_id>/attempt/<int:attempt_id>/submit/', api_views.submit_answer, name='api_submit_quiz'),
+    path('api/quizzes/<int:quiz_id>/attempt/<int:attempt_id>/complete/', api_views.complete_quiz_attempt, name='api_complete_quiz'),
+    path('api/quizzes/<int:quiz_id>/attempt/<int:attempt_id>/results/', api_views.quiz_attempt_detail, name='api_quiz_results'),
+    path('api/my-attempts/', api_views.my_quiz_attempts, name='api_my_quiz_attempts'),
 ]

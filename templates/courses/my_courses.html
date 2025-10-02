@@ -7,267 +7,220 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-intellilearn-white">My Courses</h1>
+            <h1 class="text-3xl font-bold text-intellilearn-white">My Learning Dashboard</h1>
             <p class="text-gray-400 mt-2">
-                Continue your learning journey with your enrolled courses
+                Track your progress and continue your learning journey
             </p>
         </div>
         
-        <!-- Course Progress Overview -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
                 <div class="flex items-center">
-                    <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-book text-white text-xl"></i>
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center">
+                        <i class="fas fa-book-open text-white"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-gray-400 text-sm">Enrolled Courses</p>
-                        <p class="text-2xl font-bold text-intellilearn-white">3</p>
+                        <div class="text-2xl font-bold text-intellilearn-white">{{ enrollments.count }}</div>
+                        <div class="text-gray-400 text-sm">Enrolled Courses</div>
                     </div>
                 </div>
             </div>
             
             <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
                 <div class="flex items-center">
-                    <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-check-circle text-white text-xl"></i>
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
+                        <i class="fas fa-check-circle text-white"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-gray-400 text-sm">Completed</p>
-                        <p class="text-2xl font-bold text-intellilearn-white">1</p>
+                        <div class="text-2xl font-bold text-intellilearn-white">
+                            {% if enrollments %}
+                                {% with best_progress=enrollments|dictsortreversed:"progress_percentage"|first %}
+                                    {{ best_progress.progress_percentage|floatformat:0 }}%
+                                {% endwith %}
+                            {% else %}
+                                0%
+                            {% endif %}
+                        </div>
+                        <div class="text-gray-400 text-sm">Best Progress</div>
                     </div>
                 </div>
             </div>
             
             <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
                 <div class="flex items-center">
-                    <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-clock text-white text-xl"></i>
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center">
+                        <i class="fas fa-trophy text-white"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-gray-400 text-sm">In Progress</p>
-                        <p class="text-2xl font-bold text-intellilearn-white">2</p>
+                        <div class="text-2xl font-bold text-intellilearn-white">0</div>
+                        <div class="text-gray-400 text-sm">Badges Earned</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-500 flex items-center justify-center">
+                        <i class="fas fa-fire text-white"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-2xl font-bold text-intellilearn-white">0</div>
+                        <div class="text-gray-400 text-sm">Day Streak</div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Enrolled Courses -->
-        <div class="space-y-6">
-            <!-- Course 1 - In Progress -->
-            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-brain text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-intellilearn-white">Introduction to Machine Learning</h3>
-                            <p class="text-gray-400">Beginner • 12 lessons • 2.5 hours</p>
-                            <div class="flex items-center space-x-2 mt-1">
-                                <span class="text-sm text-blue-400">65% complete</span>
-                                <span class="text-xs text-gray-500">• Last studied 2 days ago</span>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="{% url 'courses:learn' course_slug='intro-machine-learning' %}" 
-                       class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
-                        Continue Learning
-                    </a>
-                </div>
-                
-                <!-- Progress Bar -->
-                <div class="mb-4">
-                    <div class="w-full bg-intellilearn-gray-dark rounded-full h-3">
-                        <div class="bg-gradient-to-r from-blue-500 to-blue-400 h-3 rounded-full" style="width: 65%"></div>
-                    </div>
-                </div>
-                
-                <!-- Recent Lessons -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="bg-intellilearn-gray-dark rounded-lg p-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                <i class="fas fa-check text-white text-sm"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-intellilearn-white text-sm font-medium">What is Machine Learning?</h4>
-                                <p class="text-gray-400 text-xs">Completed</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-intellilearn-gray-dark rounded-lg p-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                <i class="fas fa-check text-white text-sm"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-intellilearn-white text-sm font-medium">Types of Learning</h4>
-                                <p class="text-gray-400 text-xs">Completed</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-intellilearn-gray-dark rounded-lg p-4 border border-intellilearn-red">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-intellilearn-red rounded-full flex items-center justify-center">
-                                <i class="fas fa-play text-white text-sm"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-intellilearn-white text-sm font-medium">Neural Networks Basics</h4>
-                                <p class="text-intellilearn-red text-xs">Next lesson</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-intellilearn-white">My Enrolled Courses</h2>
+                <a href="{% url 'courses:list' %}" class="text-intellilearn-red hover:text-red-400 text-sm">
+                    <i class="fas fa-plus mr-1"></i>Browse Courses
+                </a>
             </div>
             
-            <!-- Course 2 - In Progress -->
-            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-code text-white text-xl"></i>
+            {% if enrollments %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for enrollment in enrollments %}
+                <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
+                    {% if enrollment.course.thumbnail %}
+                        <img src="{{ enrollment.course.thumbnail.url }}" alt="{{ enrollment.course.title }}" class="h-48 w-full object-cover">
+                    {% else %}
+                        <div class="h-48 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-4xl"></i>
                         </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-intellilearn-white">Python for AI Development</h3>
-                            <p class="text-gray-400">Beginner • 18 lessons • 5 hours</p>
-                            <div class="flex items-center space-x-2 mt-1">
-                                <span class="text-sm text-teal-400">25% complete</span>
-                                <span class="text-xs text-gray-500">• Last studied 1 week ago</span>
-                            </div>
+                    {% endif %}
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="{{ enrollment.course.get_level_color }} text-xs px-2 py-1 rounded-full">
+                                {{ enrollment.course.get_level_display }}
+                            </span>
+                            <span class="text-gray-400 text-xs">{{ enrollment.course.estimated_duration }} min</span>
                         </div>
-                    </div>
-                    <a href="{% url 'courses:learn' course_slug='python-ai-dev' %}" 
-                       class="bg-intellilearn-red text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
-                        Continue Learning
-                    </a>
-                </div>
-                
-                <!-- Progress Bar -->
-                <div class="mb-4">
-                    <div class="w-full bg-intellilearn-gray-dark rounded-full h-3">
-                        <div class="bg-gradient-to-r from-teal-500 to-teal-400 h-3 rounded-full" style="width: 25%"></div>
-                    </div>
-                </div>
-                
-                <!-- Recent Lessons -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="bg-intellilearn-gray-dark rounded-lg p-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                <i class="fas fa-check text-white text-sm"></i>
+                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">{{ enrollment.course.title }}</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            {{ enrollment.course.short_description|truncatewords:15 }}
+                        </p>
+                        
+                        <!-- Progress -->
+                        <div class="mb-4">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Progress</span>
+                                <span class="text-intellilearn-white">{{ enrollment.progress_percentage|floatformat:0 }}%</span>
                             </div>
-                            <div>
-                                <h4 class="text-intellilearn-white text-sm font-medium">Python Basics</h4>
-                                <p class="text-gray-400 text-xs">Completed</p>
+                            <div class="w-full bg-intellilearn-gray-dark rounded-full h-2">
+                                <div class="bg-intellilearn-red h-2 rounded-full progress-bar" data-progress="{{ enrollment.progress_percentage }}"></div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="bg-intellilearn-gray-dark rounded-lg p-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                <i class="fas fa-check text-white text-sm"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-intellilearn-white text-sm font-medium">NumPy Fundamentals</h4>
-                                <p class="text-gray-400 text-xs">Completed</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-intellilearn-gray-dark rounded-lg p-4 border border-intellilearn-red">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-intellilearn-red rounded-full flex items-center justify-center">
-                                <i class="fas fa-play text-white text-sm"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-intellilearn-white text-sm font-medium">Pandas for Data</h4>
-                                <p class="text-intellilearn-red text-xs">Next lesson</p>
-                            </div>
+                        
+                        <div class="flex space-x-2">
+                            <a href="{% url 'courses:learn' course_slug=enrollment.course.slug %}" class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1 text-center">
+                                {% if enrollment.progress_percentage == 0 %}
+                                    Start Learning
+                                {% elif enrollment.progress_percentage == 100 %}
+                                    Review Course
+                                {% else %}
+                                    Continue
+                                {% endif %}
+                            </a>
+                            <a href="{% url 'courses:progress' slug=enrollment.course.slug %}" class="border border-intellilearn-gray-dark text-gray-400 px-3 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
+                                <i class="fas fa-chart-line"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            
-            <!-- Course 3 - Completed -->
-            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-green-700">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-graduation-cap text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-intellilearn-white">AI Fundamentals</h3>
-                            <p class="text-gray-400">Beginner • 8 lessons • 1.5 hours</p>
-                            <div class="flex items-center space-x-2 mt-1">
-                                <span class="text-sm text-green-400">100% complete</span>
-                                <span class="text-xs text-gray-500">• Completed 2 weeks ago</span>
-                                <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded-full">
-                                    <i class="fas fa-trophy mr-1"></i>Certificate Earned
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex space-x-2">
-                        <a href="#" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
-                            <i class="fas fa-certificate mr-2"></i>View Certificate
-                        </a>
-                        <a href="#" class="border border-intellilearn-gray-dark text-gray-400 px-4 py-2 rounded-lg hover:border-intellilearn-red hover:text-intellilearn-red transition-colors">
-                            <i class="fas fa-redo mr-2"></i>Review
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Progress Bar -->
-                <div class="mb-4">
-                    <div class="w-full bg-green-800 rounded-full h-3">
-                        <div class="bg-gradient-to-r from-green-500 to-green-400 h-3 rounded-full" style="width: 100%"></div>
-                    </div>
-                </div>
-                
-                <!-- Course Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-intellilearn-gray-dark rounded-lg p-4 text-center">
-                        <div class="text-2xl font-bold text-green-400 mb-1">A+</div>
-                        <div class="text-xs text-gray-400">Final Grade</div>
-                    </div>
-                    <div class="bg-intellilearn-gray-dark rounded-lg p-4 text-center">
-                        <div class="text-2xl font-bold text-green-400 mb-1">95%</div>
-                        <div class="text-xs text-gray-400">Quiz Average</div>
-                    </div>
-                    <div class="bg-intellilearn-gray-dark rounded-lg p-4 text-center">
-                        <div class="text-2xl font-bold text-green-400 mb-1">8/8</div>
-                        <div class="text-xs text-gray-400">Lessons Completed</div>
-                    </div>
-                </div>
+            {% else %}
+            <div class="bg-intellilearn-gray-medium rounded-lg p-12 text-center border border-intellilearn-gray-dark">
+                <i class="fas fa-book-open text-gray-500 text-5xl mb-4"></i>
+                <h3 class="text-xl font-medium text-gray-400 mb-2">No enrolled courses yet</h3>
+                <p class="text-gray-500 mb-6">Start your learning journey by enrolling in a course.</p>
+                <a href="{% url 'courses:list' %}" class="bg-intellilearn-red text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors inline-block">
+                    <i class="fas fa-search mr-2"></i>Browse Courses
+                </a>
             </div>
+            {% endif %}
         </div>
         
-        <!-- Recommended Next Courses -->
-        <div class="mt-12">
+        <!-- Recommended Courses -->
+        <div>
             <h2 class="text-xl font-bold text-intellilearn-white mb-6">Recommended for You</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
-                    <div class="h-32 bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center">
-                        <i class="fas fa-network-wired text-white text-2xl"></i>
+                <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark">
+                    <div class="h-48 bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center">
+                        <i class="fas fa-network-wired text-white text-4xl"></i>
                     </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">Deep Learning Fundamentals</h3>
-                        <p class="text-gray-400 text-sm mb-3">
-                            Build on your ML knowledge with deep neural networks.
-                        </p>
-                        <div class="flex space-x-2">
-                            <button class="bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex-1">
-                                Enroll Now
-                            </button>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="bg-yellow-900 text-yellow-300 text-xs px-2 py-1 rounded-full">Intermediate</span>
+                            <span class="text-gray-400 text-xs">4 hours</span>
                         </div>
+                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">Neural Networks Fundamentals</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Understand the building blocks of deep learning with practical examples.
+                        </p>
+                        <a href="#" class="text-intellilearn-red hover:text-red-400 text-sm font-medium">
+                            View Details <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark">
+                    <div class="h-48 bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center">
+                        <i class="fas fa-robot text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="bg-red-900 text-red-300 text-xs px-2 py-1 rounded-full">Advanced</span>
+                            <span class="text-gray-400 text-xs">6 hours</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">Reinforcement Learning</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Master decision-making algorithms used in AI agents and robotics.
+                        </p>
+                        <a href="#" class="text-intellilearn-red hover:text-red-400 text-sm font-medium">
+                            View Details <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-intellilearn-gray-medium rounded-lg overflow-hidden border border-intellilearn-gray-dark">
+                    <div class="h-48 bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center">
+                        <i class="fas fa-chart-bar text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded-full">Beginner</span>
+                            <span class="text-gray-400 text-xs">3 hours</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-intellilearn-white mb-2">Data Visualization with Python</h3>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Create compelling visualizations to communicate data insights effectively.
+                        </p>
+                        <a href="#" class="text-intellilearn-red hover:text-red-400 text-sm font-medium">
+                            View Details <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Set progress bar widths using JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressBars = document.querySelectorAll('.progress-bar');
+        progressBars.forEach(function(bar) {
+            const progress = parseFloat(bar.getAttribute('data-progress'));
+            // Ensure progress is between 0 and 100
+            const clampedProgress = Math.min(100, Math.max(0, progress));
+            bar.style.width = clampedProgress + '%';
+        });
+    });
+</script>
+
 {% endblock %}

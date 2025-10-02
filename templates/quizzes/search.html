@@ -1,52 +1,52 @@
 {% extends 'base.html' %}
 
-{% block title %}Quizzes - IntelliLearn AI{% endblock %}
+{% block title %}Search Quizzes - IntelliLearn AI{% endblock %}
 
 {% block content %}
 <div class="min-h-screen bg-intellilearn-black py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Page Header -->
         <div class="mb-8">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-intellilearn-white">AI Quizzes</h1>
-                    <p class="text-gray-400 mt-2">
-                        Test your knowledge with interactive quizzes designed to reinforce your AI learning.
-                    </p>
-                </div>
-                {% if user.is_authenticated and user.is_mentor %}
-                    <div class="mt-4 lg:mt-0">
-                        <a href="{% url 'quizzes:create' %}" 
-                           class="bg-intellilearn-red text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors font-medium">
-                            <i class="fas fa-plus mr-2"></i>Create Quiz
-                        </a>
-                    </div>
-                {% endif %}
-            </div>
+            <h1 class="text-3xl font-bold text-intellilearn-white">Search Quizzes</h1>
+            <p class="text-gray-400 mt-2">
+                Find quizzes by keyword, difficulty, or category.
+            </p>
         </div>
 
-        <!-- Search and Filters -->
+        <!-- Search Form -->
         <div class="bg-intellilearn-gray-medium rounded-lg p-6 mb-8 border border-intellilearn-gray-dark">
-            <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-12 gap-4">
                 <!-- Search -->
-                <div class="md:col-span-2">
+                <div class="md:col-span-6">
                     <input type="text" name="search" placeholder="Search quizzes..." 
-                           value="{{ request.GET.search }}"
+                           value="{{ search_query }}"
                            class="w-full px-4 py-2 bg-intellilearn-gray-dark text-intellilearn-white border border-intellilearn-gray-dark rounded-lg focus:border-intellilearn-red focus:outline-none">
                 </div>
                 
                 <!-- Difficulty Filter -->
-                <div>
+                <div class="md:col-span-2">
                     <select name="difficulty" class="w-full px-4 py-2 bg-intellilearn-gray-dark text-intellilearn-white border border-intellilearn-gray-dark rounded-lg focus:border-intellilearn-red focus:outline-none">
                         <option value="">All Difficulties</option>
-                        <option value="easy" {% if request.GET.difficulty == 'easy' %}selected{% endif %}>Easy</option>
-                        <option value="medium" {% if request.GET.difficulty == 'medium' %}selected{% endif %}>Medium</option>
-                        <option value="hard" {% if request.GET.difficulty == 'hard' %}selected{% endif %}>Hard</option>
+                        <option value="easy" {% if selected_difficulty == 'easy' %}selected{% endif %}>Easy</option>
+                        <option value="medium" {% if selected_difficulty == 'medium' %}selected{% endif %}>Medium</option>
+                        <option value="hard" {% if selected_difficulty == 'hard' %}selected{% endif %}>Hard</option>
+                    </select>
+                </div>
+                
+                <!-- Category Filter -->
+                <div class="md:col-span-2">
+                    <select name="category" class="w-full px-4 py-2 bg-intellilearn-gray-dark text-intellilearn-white border border-intellilearn-gray-dark rounded-lg focus:border-intellilearn-red focus:outline-none">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
                     </select>
                 </div>
                 
                 <!-- Search Button -->
-                <div>
+                <div class="md:col-span-2">
                     <button type="submit" class="w-full bg-intellilearn-red text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
                         <i class="fas fa-search mr-2"></i>Search
                     </button>
@@ -54,28 +54,19 @@
             </form>
         </div>
 
-        <!-- Quiz Categories -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {% for category in categories %}
-            <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-colors">
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                        <i class="{{ category.icon|default:'fas fa-folder' }} text-white text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-intellilearn-white font-semibold">{{ category.name }}</h3>
-                        <p class="text-gray-400 text-sm">{{ category.quiz_count }} quizzes available</p>
-                    </div>
-                </div>
-                <p class="text-gray-300 text-sm mb-4">{{ category.description }}</p>
-                <a href="?category={{ category.slug }}" class="text-intellilearn-red hover:text-red-400 text-sm font-medium">
-                    Explore Quizzes <i class="fas fa-arrow-right ml-1"></i>
-                </a>
-            </div>
-            {% endfor %}
+        <!-- Search Results -->
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-intellilearn-white mb-4">
+                {% if search_query %}
+                    Search Results for "{{ search_query }}"
+                {% else %}
+                    All Quizzes
+                {% endif %}
+                <span class="text-gray-400 text-lg">({{ paginator.count }} found)</span>
+            </h2>
         </div>
 
-        <!-- Dynamic Quizzes List -->
+        <!-- Quizzes List -->
         <div class="space-y-6">
             {% for quiz in quizzes %}
             <div class="bg-intellilearn-gray-medium rounded-lg p-6 border border-intellilearn-gray-dark hover:border-intellilearn-red transition-all duration-300">
@@ -93,7 +84,7 @@
                         
                         <h3 class="text-xl font-bold text-intellilearn-white mb-2">{{ quiz.title }}</h3>
                         <p class="text-gray-300 mb-3">
-                            {{ quiz.description }}
+                            {{ quiz.description|truncatewords:30 }}
                         </p>
                         
                         <div class="flex items-center space-x-4 text-sm text-gray-400">
@@ -117,9 +108,20 @@
             </div>
             {% empty %}
             <div class="text-center py-12">
-                <i class="fas fa-question-circle text-gray-500 text-5xl mb-4"></i>
-                <h3 class="text-xl font-medium text-gray-400 mb-2">No quizzes available</h3>
-                <p class="text-gray-500">Check back later for new quizzes.</p>
+                <i class="fas fa-search text-gray-500 text-5xl mb-4"></i>
+                <h3 class="text-xl font-medium text-gray-400 mb-2">No quizzes found</h3>
+                <p class="text-gray-500">
+                    {% if search_query %}
+                        Your search for "{{ search_query }}" did not match any quizzes.
+                    {% else %}
+                        There are currently no quizzes available.
+                    {% endif %}
+                </p>
+                <div class="mt-4">
+                    <a href="{% url 'quizzes:list' %}" class="text-intellilearn-red hover:text-red-400">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to all quizzes
+                    </a>
+                </div>
             </div>
             {% endfor %}
         </div>
@@ -132,10 +134,10 @@
             </div>
             <div class="flex space-x-2">
                 {% if page_obj.has_previous %}
-                    <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.difficulty %}&difficulty={{ request.GET.difficulty }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="px-3 py-1 rounded bg-intellilearn-gray-dark text-intellilearn-white hover:bg-intellilearn-gray-medium">
+                    <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_difficulty %}&difficulty={{ selected_difficulty }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="px-3 py-1 rounded bg-intellilearn-gray-dark text-intellilearn-white hover:bg-intellilearn-gray-medium">
                         <i class="fas fa-angle-double-left"></i>
                     </a>
-                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.difficulty %}&difficulty={{ request.GET.difficulty }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="px-3 py-1 rounded bg-intellilearn-gray-dark text-intellilearn-white hover:bg-intellilearn-gray-medium">
+                    <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_difficulty %}&difficulty={{ selected_difficulty }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="px-3 py-1 rounded bg-intellilearn-gray-dark text-intellilearn-white hover:bg-intellilearn-gray-medium">
                         <i class="fas fa-angle-left"></i>
                     </a>
                 {% endif %}
@@ -145,10 +147,10 @@
                 </span>
                 
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.difficulty %}&difficulty={{ request.GET.difficulty }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="px-3 py-1 rounded bg-intellilearn-gray-dark text-intellilearn-white hover:bg-intellilearn-gray-medium">
+                    <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_difficulty %}&difficulty={{ selected_difficulty }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="px-3 py-1 rounded bg-intellilearn-gray-dark text-intellilearn-white hover:bg-intellilearn-gray-medium">
                         <i class="fas fa-angle-right"></i>
                     </a>
-                    <a href="?page={{ paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.difficulty %}&difficulty={{ request.GET.difficulty }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="px-3 py-1 rounded bg-intellilearn-gray-dark text-intellilearn-white hover:bg-intellilearn-gray-medium">
+                    <a href="?page={{ paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_difficulty %}&difficulty={{ selected_difficulty }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="px-3 py-1 rounded bg-intellilearn-gray-dark text-intellilearn-white hover:bg-intellilearn-gray-medium">
                         <i class="fas fa-angle-double-right"></i>
                     </a>
                 {% endif %}
